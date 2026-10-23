@@ -30,7 +30,7 @@ python manage.py runserver
 Visit: http://127.0.0.1:8000
 
 ---
-
+<!--
 ## Dev Login Credentials
 
 | Role     | Username       | Password        |
@@ -42,7 +42,7 @@ Visit: http://127.0.0.1:8000
 All seeded employees use password: `Employee@123`
 
 ---
-
+-->
 ## Run Tests
 
 ```bash
