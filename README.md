@@ -123,7 +123,7 @@ Creates: 1 HR user, 10 employees, 4 departments, shifts, 5 holidays, 8 leave typ
 ---
 
 ## Screenshots 
-
+<!--
 <img width="1432" height="780" alt="Screenshot 2026-10-22 at 9 23 41 PM" src="https://github.com/user-attachments/assets/7d17df5b-b883-4bff-bb21-42927177c1da" />
 
 <img width="1430" height="774" alt="Screenshot 2026-10-22 at 9 24 04 PM" src="https://github.com/user-attachments/assets/42416dbe-e7a4-4852-97b7-fe31251d46cc" />
@@ -137,5 +137,6 @@ Creates: 1 HR user, 10 employees, 4 departments, shifts, 5 holidays, 8 leave typ
 <img width="1430" height="768" alt="Screenshot 2026-10-22 at 9 25 34 PM" src="https://github.com/user-attachments/assets/53146a99-9b79-4def-a774-416deff5aaa4" />
 
 <img width="673" height="687" alt="Screenshot 2026-10-22 at 9 25 58 PM" src="https://github.com/user-attachments/assets/d5efdad8-d134-40b7-975f-c533711e9619" />
+-->
 
 
