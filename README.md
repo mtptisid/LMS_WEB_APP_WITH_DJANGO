@@ -119,3 +119,23 @@ python manage.py seed_data
 ```
 
 Creates: 1 HR user, 10 employees, 4 departments, shifts, 5 holidays, 8 leave types, 30-day attendance history, WFH requests, leave requests, and notifications.
+
+---
+
+## Screenshots 
+
+<img width="1432" height="780" alt="Screenshot 2026-10-22 at 9 23 41 PM" src="https://github.com/user-attachments/assets/7d17df5b-b883-4bff-bb21-42927177c1da" />
+
+<img width="1430" height="774" alt="Screenshot 2026-10-22 at 9 24 04 PM" src="https://github.com/user-attachments/assets/42416dbe-e7a4-4852-97b7-fe31251d46cc" />
+
+<img width="1432" height="780" alt="Screenshot 2026-10-22 at 9 24 21 PM" src="https://github.com/user-attachments/assets/58707d41-b331-4670-a4c6-090d6c41ed76" />
+
+<img width="1435" height="760" alt="Screenshot 2026-10-22 at 9 24 39 PM" src="https://github.com/user-attachments/assets/72fce317-7750-43d2-a568-8a3bfe7865b9" />
+
+<img width="1428" height="769" alt="Screenshot 2026-10-22 at 9 25 14 PM" src="https://github.com/user-attachments/assets/1e5dbd8a-6c99-469f-9948-2a0d2f4c0404" />
+
+<img width="1430" height="768" alt="Screenshot 2026-10-22 at 9 25 34 PM" src="https://github.com/user-attachments/assets/53146a99-9b79-4def-a774-416deff5aaa4" />
+
+<img width="673" height="687" alt="Screenshot 2026-10-22 at 9 25 58 PM" src="https://github.com/user-attachments/assets/d5efdad8-d134-40b7-975f-c533711e9619" />
+
+
