@@ -1,6 +1,6 @@
 # EMS — Employee Management System
 
-A production-ready, full-stack Employee Management System built with Django 5.2, SQLite (dev), and a clean Bootstrap 5 UI inspired by Keka HR.
+A production-ready, full-stack Employee Management System built with Django 5.2, SQLite (dev), and a clean Bootstrap 5 UI inspired by  HR.
 
 ---
 
@@ -80,7 +80,7 @@ employeems/
 
 - **Username + password login** (no email required)
 - **Role-based access**: HR and Employee roles, server-enforced on every view
-- **Keka-style sidebar**: Icon-only rail with hover tooltips
+- **-style sidebar**: Icon-only rail with hover tooltips
 - **Employee Dashboard**: Quick access, profile card, leave balances, notifications
 - **Attendance**: Clock-in/out (Office + WFH), weekly stats, shift schedule, correction requests
 - **Leave Management**: 8 leave types, balance ledger, 4 Chart.js charts (doughnut + bar), history table
