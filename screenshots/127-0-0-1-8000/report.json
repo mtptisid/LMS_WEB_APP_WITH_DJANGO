@@ -1,0 +1,946 @@
+[
+  {
+    "url": "http://127.0.0.1:8000/",
+    "depth": 0,
+    "screenshot": "home-17abf5/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "home-17abf5/btn_02_ag-anjali-gupta-employee.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out",
+        "screenshot": "home-17abf5/btn_04_clock-out.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 5,
+        "label": "VIEW ALL",
+        "screenshot": "home-17abf5/btn_05_view-all.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/#"
+      },
+      {
+        "index": 6,
+        "label": "Request Leave",
+        "screenshot": "home-17abf5/btn_06_request-leave.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 7,
+        "label": "\ud83d\udcc5 Apply Leave",
+        "screenshot": "home-17abf5/btn_07_apply-leave.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 8,
+        "label": "\ud83c\udfe0 Apply WFH",
+        "screenshot": "home-17abf5/btn_08_apply-wfh.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 9,
+        "label": "Post",
+        "screenshot": "home-17abf5/btn_09_post.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 10,
+        "label": "Poll",
+        "screenshot": "home-17abf5/btn_10_poll.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 11,
+        "label": "Praise",
+        "screenshot": "home-17abf5/btn_11_praise.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/"
+      },
+      {
+        "index": 12,
+        "label": "Button 13",
+        "screenshot": "home-17abf5/btn_12_button-13.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/#"
+      },
+      {
+        "index": 13,
+        "label": "View Calendar",
+        "screenshot": "home-17abf5/btn_13_view-calendar.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/dashboard/#"
+      },
+      {
+        "index": 14,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Dashboard \u2014 Employee Management System",
+    "clickable": 17
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/dashboard",
+    "depth": 1,
+    "screenshot": "employees-dashboard-1ac640/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-dashboard-1ac640/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out",
+        "screenshot": "employees-dashboard-1ac640/btn_04_clock-out.png"
+      },
+      {
+        "index": 5,
+        "label": "VIEW ALL",
+        "screenshot": "employees-dashboard-1ac640/btn_05_view-all.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Leave",
+        "screenshot": "employees-dashboard-1ac640/btn_06_request-leave.png"
+      },
+      {
+        "index": 7,
+        "label": "\ud83d\udcc5 Apply Leave",
+        "screenshot": "employees-dashboard-1ac640/btn_07_apply-leave.png"
+      },
+      {
+        "index": 8,
+        "label": "\ud83c\udfe0 Apply WFH",
+        "screenshot": "employees-dashboard-1ac640/btn_08_apply-wfh.png"
+      },
+      {
+        "index": 9,
+        "label": "Post",
+        "screenshot": "employees-dashboard-1ac640/btn_09_post.png"
+      },
+      {
+        "index": 10,
+        "label": "Poll",
+        "screenshot": "employees-dashboard-1ac640/btn_10_poll.png"
+      },
+      {
+        "index": 11,
+        "label": "Praise",
+        "screenshot": "employees-dashboard-1ac640/btn_11_praise.png"
+      },
+      {
+        "index": 12,
+        "label": "Button 13",
+        "screenshot": "employees-dashboard-1ac640/btn_12_button-13.png"
+      },
+      {
+        "index": 13,
+        "label": "View Calendar",
+        "screenshot": "employees-dashboard-1ac640/btn_13_view-calendar.png"
+      },
+      {
+        "index": 14,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Dashboard \u2014 Employee Management System",
+    "clickable": 17
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile",
+    "depth": 1,
+    "screenshot": "employees-profile-d321c9/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-profile-d321c9/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "+ Add Skill",
+        "screenshot": "employees-profile-d321c9/btn_04_add-skill.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams",
+    "depth": 1,
+    "screenshot": "teams-dabbf7/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "teams-dabbf7/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/finances",
+    "depth": 1,
+    "screenshot": "employees-finances-acfc71/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-finances-acfc71/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Finances \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams/?view=org",
+    "depth": 1,
+    "screenshot": "teams-view-org-285b93/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "teams-view-org-285b93/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Me",
+        "screenshot": null,
+        "unchanged": true
+      },
+      {
+        "index": 5,
+        "label": "Top of the Org",
+        "screenshot": "teams-view-org-285b93/btn_05_top-of-the-org.png"
+      },
+      {
+        "index": 6,
+        "label": "5",
+        "screenshot": "teams-view-org-285b93/btn_06_5.png"
+      },
+      {
+        "index": 7,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 10
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance",
+    "depth": 1,
+    "screenshot": "attendance-2fbf98/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-2fbf98/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:35 PM",
+        "screenshot": "attendance-2fbf98/btn_04_clock-out-office-in-since-04-35-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-2fbf98/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-2fbf98/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-2fbf98/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Filter",
+        "screenshot": "attendance-2fbf98/btn_08_filter.png",
+        "navigated_to": "http://127.0.0.1:8000/attendance/?tab=logs&period=30&date_from=&date_to=&mode=&status="
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves",
+    "depth": 1,
+    "screenshot": "leaves-d42c53/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "leaves-d42c53/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Apply Leave",
+        "screenshot": "leaves-d42c53/btn_04_apply-leave.png"
+      },
+      {
+        "index": 5,
+        "label": "Filter",
+        "screenshot": null,
+        "unchanged": true,
+        "navigated_to": "http://127.0.0.1:8000/leaves/?leave_type=&status=&date_from=&date_to="
+      },
+      {
+        "index": 6,
+        "label": "Cancel",
+        "screenshot": "leaves-d42c53/btn_06_cancel.png"
+      },
+      {
+        "index": 7,
+        "label": "Cancel",
+        "screenshot": "leaves-d42c53/btn_07_cancel.png"
+      },
+      {
+        "index": 8,
+        "label": "Cancel",
+        "screenshot": "leaves-d42c53/btn_08_cancel.png"
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leaves \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/notifications",
+    "depth": 1,
+    "screenshot": "notifications-980444/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "notifications-980444/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Mark all read",
+        "screenshot": "notifications-980444/btn_04_mark-all-read.png"
+      }
+    ],
+    "title": "Notifications \u2014 Employee Management System",
+    "clickable": 11
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=edit",
+    "depth": 1,
+    "screenshot": "employees-profile-tab-edit-4851e3/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-profile-tab-edit-4851e3/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Save Changes",
+        "screenshot": "employees-profile-tab-edit-4851e3/btn_04_save-changes.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves/balance",
+    "depth": 1,
+    "screenshot": "leaves-balance-7f13a3/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "leaves-balance-7f13a3/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leave Balance Details \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/correction",
+    "depth": 1,
+    "screenshot": "attendance-correction-6464d1/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-correction-6464d1/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Submit Correction",
+        "screenshot": "attendance-correction-6464d1/btn_04_submit-correction.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance Correction \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=about",
+    "depth": 2,
+    "screenshot": "employees-profile-tab-about-b1031c/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-profile-tab-about-b1031c/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "+ Add Skill",
+        "screenshot": "employees-profile-tab-about-b1031c/btn_04_add-skill.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=profile",
+    "depth": 2,
+    "screenshot": "employees-profile-tab-profile-b60e56/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-profile-tab-profile-b60e56/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=job",
+    "depth": 2,
+    "screenshot": "employees-profile-tab-job-edaa1b/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-profile-tab-job-edaa1b/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams/?view=directory",
+    "depth": 2,
+    "screenshot": "teams-view-directory-147867/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "teams-view-directory-147867/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/finances/?tab=summary",
+    "depth": 2,
+    "screenshot": "employees-finances-tab-summary-a46177/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-finances-tab-summary-a46177/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Finances \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=logs&period=30",
+    "depth": 2,
+    "screenshot": "attendance-tab-logs-period-30-ead884/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:35 PM",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_04_clock-out-office-in-since-04-35-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Filter",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_08_filter.png",
+        "navigated_to": "http://127.0.0.1:8000/attendance/?tab=logs&period=30&date_from=&date_to=&mode=&status="
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves/?leave_type=&status=&date_from=&date_to=",
+    "depth": 2,
+    "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Apply Leave",
+        "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/btn_04_apply-leave.png"
+      },
+      {
+        "index": 5,
+        "label": "Filter",
+        "screenshot": null,
+        "unchanged": true
+      },
+      {
+        "index": 6,
+        "label": "Cancel",
+        "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/btn_06_cancel.png"
+      },
+      {
+        "index": 7,
+        "label": "Cancel",
+        "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/btn_07_cancel.png"
+      },
+      {
+        "index": 8,
+        "label": "Cancel",
+        "screenshot": "leaves-leave-type-status-date-from-date-to-e86f8f/btn_08_cancel.png"
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leaves \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/finances/?tab=salary",
+    "depth": 3,
+    "screenshot": "employees-finances-tab-salary-d68a4c/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-finances-tab-salary-d68a4c/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Finances \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/finances/?tab=payslips",
+    "depth": 3,
+    "screenshot": "employees-finances-tab-payslips-9f4417/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_04_download.png"
+      },
+      {
+        "index": 5,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_05_download.png"
+      },
+      {
+        "index": 6,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_06_download.png"
+      },
+      {
+        "index": 7,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_07_download.png"
+      },
+      {
+        "index": 8,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_08_download.png"
+      },
+      {
+        "index": 9,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_09_download.png"
+      },
+      {
+        "index": 10,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_10_download.png"
+      },
+      {
+        "index": 11,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_11_download.png"
+      },
+      {
+        "index": 12,
+        "label": "Download",
+        "screenshot": "employees-finances-tab-payslips-9f4417/btn_12_download.png"
+      },
+      {
+        "index": 13,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Finances \u2014 Employee Management System",
+    "clickable": 16
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=wfh",
+    "depth": 3,
+    "screenshot": "attendance-tab-wfh-c1801f/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:35 PM",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_04_clock-out-office-in-since-04-35-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "+ New Request",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_08_new-request.png"
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=corrections",
+    "depth": 3,
+    "screenshot": "attendance-tab-corrections-27b306/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-tab-corrections-27b306/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:35 PM",
+        "screenshot": "attendance-tab-corrections-27b306/btn_04_clock-out-office-in-since-04-35-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-corrections-27b306/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-corrections-27b306/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-corrections-27b306/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 11
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=logs&period=2026-10",
+    "depth": 3,
+    "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "AG Anjali Gupta Employee",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_02_ag-anjali-gupta-employee.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:35 PM",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_04_clock-out-office-in-since-04-35-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Filter",
+        "screenshot": "attendance-tab-logs-period-2026-10-7b9eb7/btn_08_filter.png",
+        "navigated_to": "http://127.0.0.1:8000/attendance/?tab=logs&period=2026-10&date_from=&date_to=&mode=&status="
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  }
+]

@@ -1,0 +1,1113 @@
+[
+  {
+    "url": "http://127.0.0.1:8000/",
+    "depth": 0,
+    "screenshot": "home-17abf5/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "home-17abf5/btn_02_ps-priya-sharma-hr.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 4,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_04_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 5,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_05_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 6,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_06_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 7,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_07_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 8,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_08_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 9,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_09_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 10,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_10_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 11,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_11_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 12,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_12_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 13,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_13_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 14,
+        "label": "\u2713",
+        "screenshot": "home-17abf5/btn_14_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 15,
+        "label": "\u2715",
+        "screenshot": "home-17abf5/btn_15_item.png",
+        "navigated_to": "http://127.0.0.1:8000/hr/dashboard/"
+      },
+      {
+        "index": 16,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "HR Dashboard \u2014 Employee Management System",
+    "clickable": 19
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/dashboard",
+    "depth": 1,
+    "screenshot": "employees-dashboard-1ac640/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-dashboard-1ac640/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out",
+        "screenshot": "employees-dashboard-1ac640/btn_04_clock-out.png"
+      },
+      {
+        "index": 5,
+        "label": "VIEW ALL",
+        "screenshot": "employees-dashboard-1ac640/btn_05_view-all.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Leave",
+        "screenshot": "employees-dashboard-1ac640/btn_06_request-leave.png"
+      },
+      {
+        "index": 7,
+        "label": "\ud83d\udcc5 Apply Leave",
+        "screenshot": "employees-dashboard-1ac640/btn_07_apply-leave.png"
+      },
+      {
+        "index": 8,
+        "label": "\ud83c\udfe0 Apply WFH",
+        "screenshot": "employees-dashboard-1ac640/btn_08_apply-wfh.png"
+      },
+      {
+        "index": 9,
+        "label": "Post",
+        "screenshot": "employees-dashboard-1ac640/btn_09_post.png"
+      },
+      {
+        "index": 10,
+        "label": "Poll",
+        "screenshot": "employees-dashboard-1ac640/btn_10_poll.png"
+      },
+      {
+        "index": 11,
+        "label": "Praise",
+        "screenshot": "employees-dashboard-1ac640/btn_11_praise.png"
+      },
+      {
+        "index": 12,
+        "label": "Button 13",
+        "screenshot": "employees-dashboard-1ac640/btn_12_button-13.png"
+      },
+      {
+        "index": 13,
+        "label": "View Calendar",
+        "screenshot": "employees-dashboard-1ac640/btn_13_view-calendar.png"
+      },
+      {
+        "index": 14,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Dashboard \u2014 Employee Management System",
+    "clickable": 17
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile",
+    "depth": 1,
+    "screenshot": "employees-profile-d321c9/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-profile-d321c9/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "+ Add Skill",
+        "screenshot": "employees-profile-d321c9/btn_04_add-skill.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams",
+    "depth": 1,
+    "screenshot": "teams-dabbf7/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "teams-dabbf7/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/finances",
+    "depth": 1,
+    "screenshot": "employees-finances-acfc71/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-finances-acfc71/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Finances \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams/?view=org",
+    "depth": 1,
+    "screenshot": "teams-view-org-285b93/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "teams-view-org-285b93/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Me",
+        "screenshot": null,
+        "unchanged": true
+      },
+      {
+        "index": 5,
+        "label": "Top of the Org",
+        "screenshot": "teams-view-org-285b93/btn_05_top-of-the-org.png"
+      },
+      {
+        "index": 6,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 9
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance",
+    "depth": 1,
+    "screenshot": "attendance-2fbf98/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "attendance-2fbf98/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:26 PM",
+        "screenshot": "attendance-2fbf98/btn_04_clock-out-office-in-since-04-26-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-2fbf98/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-2fbf98/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-2fbf98/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Filter",
+        "screenshot": "attendance-2fbf98/btn_08_filter.png",
+        "navigated_to": "http://127.0.0.1:8000/attendance/?tab=logs&period=30&date_from=&date_to=&mode=&status="
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves",
+    "depth": 1,
+    "screenshot": "leaves-d42c53/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "leaves-d42c53/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Apply Leave",
+        "screenshot": "leaves-d42c53/btn_04_apply-leave.png"
+      },
+      {
+        "index": 5,
+        "label": "Filter",
+        "screenshot": null,
+        "unchanged": true,
+        "navigated_to": "http://127.0.0.1:8000/leaves/?leave_type=&status=&date_from=&date_to="
+      },
+      {
+        "index": 6,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leaves \u2014 Employee Management System",
+    "clickable": 9
+  },
+  {
+    "url": "http://127.0.0.1:8000/hr/dashboard",
+    "depth": 1,
+    "screenshot": "hr-dashboard-899358/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "hr-dashboard-899358/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_04_item.png"
+      },
+      {
+        "index": 5,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_05_item.png"
+      },
+      {
+        "index": 6,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_06_item.png"
+      },
+      {
+        "index": 7,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_07_item.png"
+      },
+      {
+        "index": 8,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_08_item.png"
+      },
+      {
+        "index": 9,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_09_item.png"
+      },
+      {
+        "index": 10,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_10_item.png"
+      },
+      {
+        "index": 11,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_11_item.png"
+      },
+      {
+        "index": 12,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_12_item.png"
+      },
+      {
+        "index": 13,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_13_item.png"
+      },
+      {
+        "index": 14,
+        "label": "\u2713",
+        "screenshot": "hr-dashboard-899358/btn_14_item.png"
+      },
+      {
+        "index": 15,
+        "label": "\u2715",
+        "screenshot": "hr-dashboard-899358/btn_15_item.png"
+      },
+      {
+        "index": 16,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "HR Dashboard \u2014 Employee Management System",
+    "clickable": 19
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/hr",
+    "depth": 1,
+    "screenshot": "employees-hr-5c16a1/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-hr-5c16a1/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Filter",
+        "screenshot": null,
+        "unchanged": true,
+        "navigated_to": "http://127.0.0.1:8000/employees/hr/?q=&department=&status="
+      },
+      {
+        "index": 5,
+        "label": "Button 6",
+        "screenshot": "employees-hr-5c16a1/btn_05_button-6.png"
+      },
+      {
+        "index": 6,
+        "label": "Button 7",
+        "screenshot": "employees-hr-5c16a1/btn_06_button-7.png"
+      },
+      {
+        "index": 7,
+        "label": "Button 8",
+        "screenshot": "employees-hr-5c16a1/btn_07_button-8.png"
+      },
+      {
+        "index": 8,
+        "label": "Button 9",
+        "screenshot": "employees-hr-5c16a1/btn_08_button-9.png"
+      },
+      {
+        "index": 9,
+        "label": "Button 10",
+        "screenshot": "employees-hr-5c16a1/btn_09_button-10.png"
+      },
+      {
+        "index": 10,
+        "label": "Button 11",
+        "screenshot": "employees-hr-5c16a1/btn_10_button-11.png"
+      },
+      {
+        "index": 11,
+        "label": "Button 12",
+        "screenshot": "employees-hr-5c16a1/btn_11_button-12.png"
+      },
+      {
+        "index": 12,
+        "label": "Button 13",
+        "screenshot": "employees-hr-5c16a1/btn_12_button-13.png"
+      },
+      {
+        "index": 13,
+        "label": "Button 14",
+        "screenshot": "employees-hr-5c16a1/btn_13_button-14.png"
+      },
+      {
+        "index": 14,
+        "label": "Button 15",
+        "screenshot": "employees-hr-5c16a1/btn_14_button-15.png"
+      },
+      {
+        "index": 15,
+        "label": "Button 16",
+        "screenshot": "employees-hr-5c16a1/btn_15_button-16.png"
+      },
+      {
+        "index": 16,
+        "label": "Button 17",
+        "screenshot": "employees-hr-5c16a1/btn_16_button-17.png"
+      },
+      {
+        "index": 17,
+        "label": "Button 18",
+        "screenshot": "employees-hr-5c16a1/btn_17_button-18.png"
+      },
+      {
+        "index": 18,
+        "label": "Button 19",
+        "screenshot": "employees-hr-5c16a1/btn_18_button-19.png"
+      },
+      {
+        "index": 19,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Employees \u2014 Employee Management System",
+    "clickable": 22
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves/hr",
+    "depth": 1,
+    "screenshot": "leaves-hr-17d17c/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "leaves-hr-17d17c/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Button 5",
+        "screenshot": null,
+        "unchanged": true,
+        "navigated_to": "http://127.0.0.1:8000/leaves/hr/?q=&status=PENDING&leave_type="
+      },
+      {
+        "index": 5,
+        "label": "Button 6",
+        "screenshot": "leaves-hr-17d17c/btn_05_button-6.png"
+      },
+      {
+        "index": 6,
+        "label": "Button 7",
+        "screenshot": "leaves-hr-17d17c/btn_06_button-7.png"
+      },
+      {
+        "index": 7,
+        "label": "Button 8",
+        "screenshot": "leaves-hr-17d17c/btn_07_button-8.png"
+      },
+      {
+        "index": 8,
+        "label": "Button 9",
+        "screenshot": "leaves-hr-17d17c/btn_08_button-9.png"
+      },
+      {
+        "index": 9,
+        "label": "Button 10",
+        "screenshot": "leaves-hr-17d17c/btn_09_button-10.png"
+      },
+      {
+        "index": 10,
+        "label": "Button 11",
+        "screenshot": "leaves-hr-17d17c/btn_10_button-11.png"
+      },
+      {
+        "index": 11,
+        "label": "Button 12",
+        "screenshot": "leaves-hr-17d17c/btn_11_button-12.png"
+      },
+      {
+        "index": 12,
+        "label": "Button 13",
+        "screenshot": "leaves-hr-17d17c/btn_12_button-13.png"
+      },
+      {
+        "index": 13,
+        "label": "Button 14",
+        "screenshot": "leaves-hr-17d17c/btn_13_button-14.png"
+      },
+      {
+        "index": 14,
+        "label": "Button 15",
+        "screenshot": "leaves-hr-17d17c/btn_14_button-15.png"
+      },
+      {
+        "index": 15,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leave Requests \u2014 Employee Management System",
+    "clickable": 18
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/hr/wfh",
+    "depth": 1,
+    "screenshot": "attendance-hr-wfh-f07d8c/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Button 5",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_04_button-5.png"
+      },
+      {
+        "index": 5,
+        "label": "Button 6",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_05_button-6.png"
+      },
+      {
+        "index": 6,
+        "label": "Button 7",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_06_button-7.png"
+      },
+      {
+        "index": 7,
+        "label": "Button 8",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_07_button-8.png"
+      },
+      {
+        "index": 8,
+        "label": "Button 9",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_08_button-9.png"
+      },
+      {
+        "index": 9,
+        "label": "Button 10",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_09_button-10.png"
+      },
+      {
+        "index": 10,
+        "label": "Button 11",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_10_button-11.png"
+      },
+      {
+        "index": 11,
+        "label": "Button 12",
+        "screenshot": "attendance-hr-wfh-f07d8c/btn_11_button-12.png"
+      },
+      {
+        "index": 12,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "WFH Requests \u2014 Employee Management System",
+    "clickable": 15
+  },
+  {
+    "url": "http://127.0.0.1:8000/notifications",
+    "depth": 1,
+    "screenshot": "notifications-980444/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "notifications-980444/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Notifications \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=edit",
+    "depth": 1,
+    "screenshot": "employees-profile-tab-edit-4851e3/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-profile-tab-edit-4851e3/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Save Changes",
+        "screenshot": "employees-profile-tab-edit-4851e3/btn_04_save-changes.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/hr/create",
+    "depth": 1,
+    "screenshot": "employees-hr-create-83ea00/00_page.png",
+    "clicks": [],
+    "title": "Create Employee \u2014 Employee Management System",
+    "login_page": true
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves/balance",
+    "depth": 2,
+    "screenshot": "leaves-balance-7f13a3/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "leaves-balance-7f13a3/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Leave Balance Details \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/teams/?view=directory",
+    "depth": 2,
+    "screenshot": "teams-view-directory-147867/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "teams-view-directory-147867/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Team \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=logs&period=30",
+    "depth": 2,
+    "screenshot": "attendance-tab-logs-period-30-ead884/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:26 PM",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_04_clock-out-office-in-since-04-26-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Filter",
+        "screenshot": "attendance-tab-logs-period-30-ead884/btn_08_filter.png",
+        "navigated_to": "http://127.0.0.1:8000/attendance/?tab=logs&period=30&date_from=&date_to=&mode=&status="
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/leaves/request",
+    "depth": 2,
+    "screenshot": "leaves-request-ec927e/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "leaves-request-ec927e/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Submit Request",
+        "screenshot": "leaves-request-ec927e/btn_04_submit-request.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Apply Leave \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/hr/1/edit",
+    "depth": 2,
+    "screenshot": "employees-hr-1-edit-29e87b/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-hr-1-edit-29e87b/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Edit Employee",
+        "screenshot": "employees-hr-1-edit-29e87b/btn_04_edit-employee.png",
+        "navigated_to": "http://127.0.0.1:8000/employees/hr/"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Edit Employee \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/notifications/?type=unread",
+    "depth": 2,
+    "screenshot": "notifications-type-unread-c1d964/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "notifications-type-unread-c1d964/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Notifications \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=about",
+    "depth": 2,
+    "screenshot": "employees-profile-tab-about-b1031c/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-profile-tab-about-b1031c/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "+ Add Skill",
+        "screenshot": "employees-profile-tab-about-b1031c/btn_04_add-skill.png"
+      },
+      {
+        "index": 5,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 8
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=wfh",
+    "depth": 3,
+    "screenshot": "attendance-tab-wfh-c1801f/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:26 PM",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_04_clock-out-office-in-since-04-26-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "+ New Request",
+        "screenshot": "attendance-tab-wfh-c1801f/btn_08_new-request.png"
+      },
+      {
+        "index": 9,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 12
+  },
+  {
+    "url": "http://127.0.0.1:8000/attendance/?tab=corrections",
+    "depth": 3,
+    "screenshot": "attendance-tab-corrections-27b306/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "attendance-tab-corrections-27b306/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Clock Out \u2014 Office In since 04:26 PM",
+        "screenshot": "attendance-tab-corrections-27b306/btn_04_clock-out-office-in-since-04-26-pm.png"
+      },
+      {
+        "index": 5,
+        "label": "Work From Home Request \u2192",
+        "screenshot": "attendance-tab-corrections-27b306/btn_05_work-from-home-request.png"
+      },
+      {
+        "index": 6,
+        "label": "Request Correction",
+        "screenshot": "attendance-tab-corrections-27b306/btn_06_request-correction.png"
+      },
+      {
+        "index": 7,
+        "label": "Apply WFH Request",
+        "screenshot": "attendance-tab-corrections-27b306/btn_07_apply-wfh-request.png"
+      },
+      {
+        "index": 8,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Attendance \u2014 Employee Management System",
+    "clickable": 11
+  },
+  {
+    "url": "http://127.0.0.1:8000/notifications/?type=read",
+    "depth": 3,
+    "screenshot": "notifications-type-read-8271d4/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "notifications-type-read-8271d4/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "Notifications \u2014 Employee Management System",
+    "clickable": 7
+  },
+  {
+    "url": "http://127.0.0.1:8000/employees/profile/?tab=profile",
+    "depth": 3,
+    "screenshot": "employees-profile-tab-profile-b60e56/00_page.png",
+    "clicks": [
+      {
+        "index": 0,
+        "label": "Logout",
+        "skipped": "looks destructive / logout"
+      },
+      {
+        "index": 2,
+        "label": "PS Priya Sharma HR",
+        "screenshot": "employees-profile-tab-profile-b60e56/btn_02_ps-priya-sharma-hr.png"
+      },
+      {
+        "index": 4,
+        "label": "Close",
+        "error": "Locator.click: Timeout 3000ms exceeded."
+      }
+    ],
+    "title": "My Profile \u2014 Employee Management System",
+    "clickable": 7
+  }
+]
