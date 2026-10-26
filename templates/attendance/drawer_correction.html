@@ -1,0 +1,99 @@
+{% load static %}
+{# Partial — loaded inside the right drawer via fetch(). No base.html. #}
+
+<!-- Work date -->
+<div class="df">
+  <label for="df-corrDate">Date to Regularize <span class="req">*</span></label>
+  <input class="dc" type="date" id="df-corrDate" name="work_date">
+  {% if recent_sessions %}
+  <div style="margin-top:10px;">
+    <div style="font-size:12px;color:#6b7587;margin-bottom:6px;">Quick-select incomplete sessions:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      {% for s in recent_sessions %}
+      <button type="button"
+              onclick="document.getElementById('df-corrDate').value='{{ s.work_date|date:\"Y-m-d\" }}'"
+              style="padding:4px 10px;border-radius:4px;border:1px solid #d9dde5;background:#f1f4f8;font-size:12px;cursor:pointer;font-family:'Poppins',sans-serif;">
+        {{ s.work_date|date:"d M" }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Requested clock-in -->
+<div class="df-row">
+  <div class="df">
+    <label for="df-corrIn">Correct Clock-In <span class="req">*</span></label>
+    <input class="dc" type="datetime-local" id="df-corrIn" name="requested_clock_in">
+  </div>
+  <div class="df">
+    <label for="df-corrOut">Correct Clock-Out</label>
+    <input class="dc" type="datetime-local" id="df-corrOut" name="requested_clock_out">
+  </div>
+</div>
+
+<!-- Calculated duration display -->
+<div class="df">
+  <span class="df-label">Duration</span>
+  <div class="df-days-out" id="df-corrDuration">—</div>
+</div>
+
+<!-- Reason -->
+<div class="df">
+  <label for="df-corrReason">Reason <span class="req">*</span></label>
+  <textarea class="dc" id="df-corrReason" name="reason" placeholder="Explain why the correction is needed…"></textarea>
+  <div class="df-error" id="df-corrReasonError"></div>
+</div>
+
+<!-- Info note -->
+<div class="df-note" aria-live="polite">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>
+  <span>
+    Your request will be reviewed by HR. Once approved, your attendance log will be updated automatically.
+    Provide accurate times — all corrections are audited.
+  </span>
+</div>
+
+<style>
+.ems-drawer-body { gap: 22px !important; }
+.df { display: flex; flex-direction: column; }
+.df label, .df-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 10px; color: #1d2433; font-family: 'Poppins', sans-serif; }
+.req { color: #f25b5b; }
+.df-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dc { width: 100%; border: 1px solid #d9dde5; border-radius: 4px; padding: 11px 14px; background: #fff; outline: 0; font-size: 14px; font-family: 'Poppins', sans-serif; color: #1d2433; box-sizing: border-box; }
+.dc:focus { border-color: #4b3fa8; box-shadow: 0 0 0 3px #eeebfa; }
+textarea.dc { resize: vertical; min-height: 96px; }
+.df-days-out { padding: 11px 14px; border-radius: 4px; background: #f1f4f8; font-weight: 500; min-height: 44px; display: flex; align-items: center; font-size: 14px; color: #1d2433; }
+.df-note { display: flex; gap: 12px; background: #f1f4f8; border: 1px solid #e6eaf0; border-radius: 8px; padding: 16px 18px; line-height: 1.6; font-size: 13px; color: #4b5563; }
+.df-note svg { width: 18px; height: 18px; flex: none; margin-top: 2px; stroke: #7b8596; fill: none; stroke-width: 1.6; }
+.df-error { color: #f25b5b; font-size: 12px; margin-top: 6px; }
+@media (max-width: 520px) { .df-row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+/* Duration calculator */
+(function () {
+  var inEl  = document.getElementById('df-corrIn');
+  var outEl = document.getElementById('df-corrOut');
+  var durEl = document.getElementById('df-corrDuration');
+  function calcDur() {
+    if (!inEl.value || !outEl.value) { durEl.textContent = '—'; return; }
+    var diff = (new Date(outEl.value) - new Date(inEl.value)) / 1000;
+    if (diff <= 0) { durEl.textContent = 'Invalid — out before in'; return; }
+    var h = Math.floor(diff / 3600), m = Math.floor((diff % 3600) / 60);
+    durEl.textContent = h + 'h ' + m + 'm';
+  }
+  inEl.addEventListener('input', calcDur);
+  outEl.addEventListener('input', calcDur);
+
+  /* Pre-fill date in datetime-local from the date field */
+  document.getElementById('df-corrDate').addEventListener('change', function () {
+    var d = this.value;
+    if (!d) return;
+    if (!inEl.value) inEl.value = d + 'T09:00';
+    if (!outEl.value) outEl.value = d + 'T18:00';
+    calcDur();
+  });
+})();
+</script>

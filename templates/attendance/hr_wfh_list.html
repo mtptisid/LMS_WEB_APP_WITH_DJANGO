@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}WFH Requests{% endblock %}
+{% block content %}
+<div class="ems-page-header d-flex justify-content-between align-items-start">
+  <div>
+    <h1 class="ems-page-title">WFH Requests</h1>
+    <p class="ems-page-subtitle">{{ page_obj.paginator.count }} total requests</p>
+  </div>
+</div>
+<div class="ems-card mb-3">
+  <div class="ems-card-body" style="padding:12px 20px;">
+    <form method="get" class="d-flex gap-2 align-items-center">
+      <label class="ems-form-label mb-0">Status:</label>
+      <select name="status" class="ems-form-control" style="width:auto;" onchange="this.form.submit()">
+        <option value="">All</option>
+        <option value="PENDING" {% if status_filter == 'PENDING' %}selected{% endif %}>Pending</option>
+        <option value="APPROVED" {% if status_filter == 'APPROVED' %}selected{% endif %}>Approved</option>
+        <option value="REJECTED" {% if status_filter == 'REJECTED' %}selected{% endif %}>Rejected</option>
+      </select>
+    </form>
+  </div>
+</div>
+<div class="ems-card">
+  <div class="ems-table-responsive">
+    <table class="ems-table">
+      <thead>
+        <tr><th>Employee</th><th>Dates</th><th>Duration</th><th>Reason</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for req in page_obj %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="ems-emp-avatar sm">{{ req.employee.get_initials }}</div>
+              <div>
+                <div style="font-weight:600;font-size:13px;">{{ req.employee.get_full_name }}</div>
+                <div style="font-size:11px;color:var(--ems-text-secondary);">{{ req.employee.employee_id }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:13px;">{{ req.start_date|date:"d M Y" }} – {{ req.end_date|date:"d M Y" }}</td>
+          <td style="font-size:13px;">{{ req.total_days }}d</td>
+          <td style="font-size:13px;max-width:180px;">{{ req.reason|truncatechars:50|default:"—" }}</td>
+          <td><span class="ems-badge ems-badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+          <td style="font-size:12px;color:var(--ems-text-secondary);">{{ req.created_at|date:"d M Y" }}</td>
+          <td>
+            {% if req.status == 'PENDING' %}
+            <div class="d-flex gap-1">
+              <form method="post" action="{% url 'attendance:hr_wfh_approve' req.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="ems-btn ems-btn-success ems-btn-xs" data-confirm="Approve WFH?">
+                  <i data-lucide="check" style="width:12px;height:12px;"></i>
+                </button>
+              </form>
+              <form method="post" action="{% url 'attendance:hr_wfh_reject' req.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="ems-btn ems-btn-danger ems-btn-xs" data-confirm="Reject WFH?">
+                  <i data-lucide="x" style="width:12px;height:12px;"></i>
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <span style="font-size:12px;color:var(--ems-text-secondary);">{{ req.reviewed_by.get_full_name|default:"—" }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7"><div class="ems-empty"><p>No WFH requests found.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

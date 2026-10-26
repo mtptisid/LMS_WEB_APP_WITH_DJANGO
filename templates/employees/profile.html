@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Cover banner ── */
+.prof-cover {
+  height: 160px;
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #7c3aed 75%, #a855f7 100%);
+  position: relative;
+  /* NO overflow:hidden so avatar can hang below */
+}
+/* Subtle pattern overlay */
+.prof-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px 14px 0 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,.07) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 20%, rgba(255,255,255,.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ── Avatar — sits BELOW the cover, hanging ── */
+.prof-avatar-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 0 28px;
+  /* Avatar hangs 40px above this row's top */
+  margin-top: -40px;
+  position: relative;
+  z-index: 3;
+}
+.prof-avatar {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 800; color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.prof-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+/* ── Name + badge row ── */
+.prof-name-row {
+  padding: 10px 28px 12px;
+  display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.prof-name { font-size: 22px; font-weight: 800; color: var(--text); }
+.prof-sub  { font-size: 13px; color: var(--text-2); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
+
+/* ── Meta row ── */
+.prof-meta {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  padding: 8px 28px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--text-2);
+}
+.prof-meta-item { display: flex; align-items: center; gap: 5px; }
+.prof-meta-item svg { color: var(--text-3); }
+
+/* ── Job info row ── */
+.prof-job-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-bottom: 1px solid var(--border);
+}
+.prof-job-cell {
+  padding: 10px 18px;
+  border-right: 1px solid var(--border);
+}
+.prof-job-cell:last-child { border-right: none; }
+.pjl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-3); margin-bottom: 3px; }
+.pjv { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+
+/* ── Tabs ── */
+.prof-tabs { display: flex; padding: 0 18px; border-bottom: 2px solid var(--border); }
+.ptab {
+  padding: 10px 18px; font-size: 13px; font-weight: 600;
+  color: var(--text-2); text-decoration: none;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: all .15s; display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.ptab:hover { color: var(--primary); }
+.ptab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* ── Tab content area ── */
+.prof-tab-body { padding: 24px 28px; }
+
+/* ── Section heading ── */
+.sh { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* ── Field grid ── */
+.fg { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.fi .fl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); margin-bottom: 3px; }
+.fi .fv { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+
+/* ── Completeness bar ── */
+.comp-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+.comp-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+
+/* ── Skills empty state ── */
+.skills-empty { text-align: center; padding: 28px 16px; }
+.skills-empty svg { opacity: .15; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% with tab=request.GET.tab|default:'about' %}
+
+<div class="ems-card" style="margin-bottom:24px;">
+
+  <!-- 1. Cover banner (no overflow:hidden) -->
+  <div class="prof-cover"></div>
+
+  <!-- 2. Avatar row (hangs below cover via negative margin-top) -->
+  <div class="prof-avatar-row">
+    <div class="prof-avatar">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="{{ profile.get_full_name }}">
+      {% else %}
+        {{ profile.get_initials }}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 3. Name + status -->
+  <div class="prof-name-row">
+    <div>
+      <div class="prof-name">
+        {{ profile.get_full_name }}
+        <span class="ems-badge badge-{{ profile.employment_status|lower }} ms-2" style="font-size:11px;vertical-align:middle;">{{ profile.get_employment_status_display }}</span>
+      </div>
+      <div class="prof-sub">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        {{ profile.department.name|default:"No Department" }}
+        {% if profile.designation %} &nbsp;·&nbsp; {{ profile.designation.title }}{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Meta row -->
+  <div class="prof-meta">
+    <div class="prof-meta-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      {{ user.username }}
+    </div>
+    <div class="prof-meta-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      {{ profile.work_location|default:"Office" }}
+    </div>
+    <div class="prof-meta-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>
+      {{ profile.employee_id }}
+    </div>
+    {% if profile.phone %}
+    <div class="prof-meta-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      {{ profile.phone }}
+    </div>
+    {% endif %}
+    {% if profile.date_of_joining %}
+    <div class="prof-meta-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Joined {{ profile.date_of_joining|date:"d M Y" }}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- 5. Job info row -->
+  <div class="prof-job-row">
+    <div class="prof-job-cell">
+      <div class="pjl">Department</div>
+      <div class="pjv">{{ profile.department.name|default:"—" }}</div>
+    </div>
+    <div class="prof-job-cell">
+      <div class="pjl">Designation</div>
+      <div class="pjv">{{ profile.designation.title|default:"—" }}</div>
+    </div>
+    <div class="prof-job-cell">
+      <div class="pjl">Employment Type</div>
+      <div class="pjv">{{ profile.get_employment_type_display }}</div>
+    </div>
+    <div class="prof-job-cell">
+      <div class="pjl">Reporting Manager</div>
+      <div class="pjv">
+        {% if profile.reporting_manager %}
+          <div class="ems-emp-avatar sm">{{ profile.reporting_manager.get_initials }}</div>
+          {{ profile.reporting_manager.get_full_name }}
+        {% else %}—{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Tabs -->
+  <div class="prof-tabs">
+    <a href="?tab=about"   class="ptab {% if tab == 'about' %}active{% endif %}">ABOUT</a>
+    <a href="?tab=profile" class="ptab {% if tab == 'profile' %}active{% endif %}">PROFILE</a>
+    <a href="?tab=job"     class="ptab {% if tab == 'job' %}active{% endif %}">JOB</a>
+    <a href="?tab=edit"    class="ptab {% if tab == 'edit' %}active{% endif %}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      EDIT
+    </a>
+  </div>
+
+  <!-- 7. Tab content -->
+  <div class="prof-tab-body">
+
+    {% if tab == 'about' %}
+    <!-- ABOUT TAB -->
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;">
+      <div>
+        <div class="sh">Summary</div>
+        <div style="background:#f8f9ff;border-radius:10px;padding:16px;font-size:13px;color:var(--text-2);min-height:70px;">
+          {% if profile.designation %}
+          {{ profile.get_full_name }} is a <strong>{{ profile.designation.title }}</strong>
+          at {{ profile.department.name|default:"the company" }}.
+          {% if profile.date_of_joining %}Joined {{ profile.date_of_joining|date:"F Y" }}.{% endif %}
+          {% else %}
+          No summary yet. Edit your profile to add one.
+          {% endif %}
+        </div>
+
+        <div class="sh mt-4">What I love about my job?</div>
+        <div style="padding:12px;border:1.5px dashed var(--border);border-radius:10px;">
+          <a href="?tab=edit" class="ems-btn btn-outline btn-sm">+ Add your response</a>
+        </div>
+
+        <div class="sh mt-4">My interests and hobbies</div>
+        <div style="padding:12px;border:1.5px dashed var(--border);border-radius:10px;">
+          <a href="?tab=edit" class="ems-btn btn-outline btn-sm">+ Add your response</a>
+        </div>
+      </div>
+      <div>
+        <!-- Profile completeness -->
+        <div class="ems-card mb-3">
+          <div class="ems-card-body">
+            <div style="font-size:13px;font-weight:700;margin-bottom:8px;">Profile Completeness</div>
+            {% with filled=4 total=8 %}{% widthratio filled total 100 as pct %}
+            <div class="comp-bar mb-1"><div class="comp-fill" style="width:{{ pct }}%;"></div></div>
+            <div style="font-size:11px;color:var(--text-3);">{{ pct }}% complete</div>
+            {% endwith %}
+          </div>
+        </div>
+        <!-- Skills empty state -->
+        <div class="ems-card">
+          <div class="skills-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" style="width:56px;height:56px;margin-bottom:10px;">
+              <circle cx="32" cy="24" r="14" stroke="#5b5ef4" stroke-width="2.5"/>
+              <path d="M8 60c0-13.26 10.75-24 24-24s24 10.74 24 24" stroke="#5b5ef4" stroke-width="2.5"/>
+            </svg>
+            <div style="font-size:13px;font-weight:600;color:var(--text);">No skills added yet</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:4px;">Showcase your skills to colleagues!</div>
+            <button class="ems-btn btn-primary btn-sm mt-3">+ Add Skill</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% elif tab == 'profile' %}
+    <!-- PROFILE TAB -->
+    <div class="sh">Personal Details</div>
+    <div class="fg">
+      <div class="fi"><div class="fl">First Name</div><div class="fv">{{ user.first_name|default:"—" }}</div></div>
+      <div class="fi"><div class="fl">Last Name</div><div class="fv">{{ user.last_name|default:"—" }}</div></div>
+      <div class="fi"><div class="fl">Username</div><div class="fv">{{ user.username }}</div></div>
+      <div class="fi"><div class="fl">Phone</div><div class="fv">{{ profile.phone|default:"—" }}</div></div>
+    </div>
+    <div class="sh">Employment Details</div>
+    <div class="fg">
+      <div class="fi"><div class="fl">Employee ID</div><div class="fv">{{ profile.employee_id }}</div></div>
+      <div class="fi"><div class="fl">Date of Joining</div><div class="fv">{{ profile.date_of_joining|date:"d F Y"|default:"—" }}</div></div>
+      <div class="fi"><div class="fl">Employment Type</div><div class="fv">{{ profile.get_employment_type_display }}</div></div>
+      <div class="fi"><div class="fl">Status</div><div class="fv"><span class="ems-badge badge-{{ profile.employment_status|lower }}">{{ profile.get_employment_status_display }}</span></div></div>
+      <div class="fi"><div class="fl">Work Location</div><div class="fv">{{ profile.work_location|default:"—" }}</div></div>
+      <div class="fi"><div class="fl">Shift</div><div class="fv">{{ profile.assigned_shift.name|default:"—" }}</div></div>
+    </div>
+
+    {% elif tab == 'job' %}
+    <!-- JOB TAB -->
+    <div class="sh">Organisation</div>
+    <div class="fg">
+      <div class="fi"><div class="fl">Department</div><div class="fv">{{ profile.department.name|default:"—" }}</div></div>
+      <div class="fi"><div class="fl">Designation</div><div class="fv">{{ profile.designation.title|default:"—" }}</div></div>
+      <div class="fi">
+        <div class="fl">Reporting Manager</div>
+        <div class="fv">
+          {% if profile.reporting_manager %}
+            <div class="ems-emp-avatar sm">{{ profile.reporting_manager.get_initials }}</div>
+            {{ profile.reporting_manager.get_full_name }}
+          {% else %}—{% endif %}
+        </div>
+      </div>
+      <div class="fi"><div class="fl">Work Location</div><div class="fv">{{ profile.work_location|default:"—" }}</div></div>
+    </div>
+
+    {% if profile.assigned_shift %}
+    <div class="sh">Shift Schedule — {{ profile.assigned_shift.name }}</div>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      {% for day in profile.assigned_shift.schedule_days.all %}
+      <div class="text-center p-3 rounded-3" style="min-width:72px;{% if day.is_working %}background:var(--primary-light);border:1.5px solid var(--primary);{% else %}background:#f8f9fa;border:1.5px solid var(--border);{% endif %}">
+        <div style="font-size:11px;font-weight:800;{% if day.is_working %}color:var(--primary){% else %}color:var(--text-3){% endif %};">{{ day.get_weekday_display|slice:":3"|upper }}</div>
+        {% if day.is_working and day.start_time %}
+        <div style="font-size:10px;color:var(--text-3);margin-top:4px;line-height:1.5;">{{ day.start_time|time:"h:i A" }}<br>{{ day.end_time|time:"h:i A" }}</div>
+        {% else %}
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px;font-weight:600;">Off</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if profile.direct_reports.exists %}
+    <div class="sh">Direct Reports ({{ profile.direct_reports.count }})</div>
+    <div class="row g-2">
+      {% for r in profile.direct_reports %}
+      <div class="col-md-4">
+        <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="border:1px solid var(--border);">
+          <div class="ems-emp-avatar sm">{{ r.get_initials }}</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;">{{ r.get_full_name }}</div>
+            <div style="font-size:11px;color:var(--text-3);">{{ r.designation.title|default:r.employee_id }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% elif tab == 'edit' %}
+    <!-- EDIT TAB -->
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="sh">Edit Your Information</div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="ems-label">First Name</label>{{ form.first_name }}
+          {% if form.first_name.errors %}<div class="text-danger" style="font-size:12px;">{{ form.first_name.errors|join:', ' }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="ems-label">Last Name</label>{{ form.last_name }}
+          {% if form.last_name.errors %}<div class="text-danger" style="font-size:12px;">{{ form.last_name.errors|join:', ' }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="ems-label">Phone</label>{{ form.phone }}
+        </div>
+        <div class="col-md-6">
+          <label class="ems-label">Work Location</label>{{ form.work_location }}
+        </div>
+        <div class="col-12">
+          <label class="ems-label">Profile Photo</label>{{ form.avatar }}
+          {% if profile.avatar %}
+          <div class="mt-2 d-flex align-items-center gap-2">
+            <img src="{{ profile.avatar.url }}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--border);" alt="">
+            <span style="font-size:12px;color:var(--text-3);">Current photo</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if form.errors %}<div class="alert alert-danger mb-3" style="font-size:13px;border-radius:10px;">Please fix the errors above.</div>{% endif %}
+      <div class="d-flex gap-2">
+        <button type="submit" class="ems-btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          Save Changes
+        </button>
+        <a href="?tab=about" class="ems-btn btn-outline">Cancel</a>
+      </div>
+    </form>
+    {% endif %}
+
+  </div><!-- /prof-tab-body -->
+</div><!-- /ems-card -->
+
+{% endwith %}
+{% endblock %}

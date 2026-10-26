@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ action }} Employee{% endblock %}
+{% block content %}
+<div class="ems-page-header">
+  <h1 class="ems-page-title">{{ action }} Employee</h1>
+  <p class="ems-page-subtitle">{% if action == 'Create' %}Add a new employee to the system{% else %}Update employee information{% endif %}</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <h6 class="ems-card-title">Employee Information</h6>
+        <a href="{% url 'employees:hr_employee_list' %}" class="ems-btn ems-btn-outline ems-btn-sm">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back
+        </a>
+      </div>
+      <div class="ems-card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in form %}
+            <div class="col-md-6">
+              <label class="ems-form-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+              {{ field }}
+              {% if field.errors %}
+              <div class="text-danger mt-1" style="font-size:12px;">{{ field.errors|join:', ' }}</div>
+              {% endif %}
+              {% if field.help_text %}
+              <div class="text-muted mt-1" style="font-size:11px;">{{ field.help_text }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger mt-3" style="font-size:13px;">{{ form.non_field_errors }}</div>
+          {% endif %}
+          <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="ems-btn ems-btn-primary">
+              <i data-lucide="save" style="width:16px;height:16px;"></i> {{ action }} Employee
+            </button>
+            <a href="{% url 'employees:hr_employee_list' %}" class="ems-btn ems-btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

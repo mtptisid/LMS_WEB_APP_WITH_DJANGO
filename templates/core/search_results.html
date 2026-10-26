@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<div class="ems-page-header">
+  <h1 class="ems-page-title">Search Results</h1>
+  <p class="ems-page-subtitle">Results for "{{ query }}"</p>
+</div>
+
+{% if not query %}
+<div class="ems-card"><div class="ems-card-body"><div class="ems-empty"><p>Enter a search term to find employees, leaves, and more.</p></div></div></div>
+{% else %}
+
+{% if employees %}
+<div class="ems-card mb-3">
+  <div class="ems-card-header"><h6 class="ems-card-title">Employees ({{ employees|length }})</h6></div>
+  <div class="ems-table-responsive">
+    <table class="ems-table">
+      <thead><tr><th>Employee</th><th>ID</th><th>Department</th><th>Designation</th></tr></thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="ems-emp-avatar sm">{{ emp.get_initials }}</div>
+              <div>
+                <div style="font-weight:600;font-size:13px;">{{ emp.get_full_name }}</div>
+                <div style="font-size:11px;color:var(--ems-text-secondary);">{{ emp.user.username }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:12px;">{{ emp.employee_id }}</td>
+          <td style="font-size:13px;">{{ emp.department.name|default:"—" }}</td>
+          <td style="font-size:13px;">{{ emp.designation.title|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if leave_requests %}
+<div class="ems-card">
+  <div class="ems-card-header"><h6 class="ems-card-title">Leave Requests ({{ leave_requests|length }})</h6></div>
+  <div class="ems-table-responsive">
+    <table class="ems-table">
+      <thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for req in leave_requests %}
+        <tr>
+          <td style="font-size:13px;">{{ req.employee.get_full_name }}</td>
+          <td style="font-size:13px;">{{ req.leave_type.name }}</td>
+          <td style="font-size:13px;">{{ req.start_date|date:"d M Y" }} – {{ req.end_date|date:"d M Y" }}</td>
+          <td><span class="ems-badge ems-badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if not employees and not leave_requests %}
+<div class="ems-card"><div class="ems-card-body"><div class="ems-empty"><p>No results found for "{{ query }}".</p></div></div></div>
+{% endif %}
+{% endif %}
+{% endblock %}

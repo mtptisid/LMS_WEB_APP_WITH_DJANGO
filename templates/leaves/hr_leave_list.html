@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Leave Requests{% endblock %}
+{% block content %}
+<div class="ems-page-header d-flex justify-content-between align-items-start">
+  <div>
+    <h1 class="ems-page-title">Leave Requests</h1>
+    <p class="ems-page-subtitle">{{ page_obj.paginator.count }} total</p>
+  </div>
+</div>
+<div class="ems-card mb-3">
+  <div class="ems-card-body" style="padding:12px 20px;">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3"><input type="text" name="q" value="{{ search }}" class="ems-form-control" placeholder="Search employee..."></div>
+      <div class="col-md-2">
+        <select name="status" class="ems-form-control">
+          <option value="">All Status</option>
+          <option value="PENDING" {% if status_filter == 'PENDING' %}selected{% endif %}>Pending</option>
+          <option value="APPROVED" {% if status_filter == 'APPROVED' %}selected{% endif %}>Approved</option>
+          <option value="REJECTED" {% if status_filter == 'REJECTED' %}selected{% endif %}>Rejected</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="leave_type" class="ems-form-control">
+          <option value="">All Types</option>
+          {% for lt in leave_types %}<option value="{{ lt.pk }}" {% if type_filter == lt.pk|stringformat:"s" %}selected{% endif %}>{{ lt.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-auto d-flex gap-2">
+        <button type="submit" class="ems-btn ems-btn-primary ems-btn-sm"><i data-lucide="search" style="width:14px;height:14px;"></i></button>
+        <a href="{% url 'leaves:hr_leave_list' %}" class="ems-btn ems-btn-outline ems-btn-sm">Clear</a>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="ems-card">
+  <div class="ems-table-responsive">
+    <table class="ems-table">
+      <thead>
+        <tr><th>Employee</th><th>Leave Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for req in page_obj %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="ems-emp-avatar sm">{{ req.employee.get_initials }}</div>
+              <div>
+                <div style="font-weight:600;font-size:13px;">{{ req.employee.get_full_name }}</div>
+                <div style="font-size:11px;color:var(--ems-text-secondary);">{{ req.employee.employee_id }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:13px;">{{ req.leave_type.name }}</td>
+          <td style="font-size:13px;">
+            {{ req.start_date|date:"d M Y" }}<br>
+            <span style="font-size:11px;color:var(--ems-text-secondary);">to {{ req.end_date|date:"d M Y" }}</span>
+          </td>
+          <td style="font-size:14px;font-weight:700;">{{ req.duration_display }}</td>
+          <td style="font-size:12px;max-width:150px;color:var(--ems-text-secondary);">{{ req.reason|truncatechars:40|default:"—" }}</td>
+          <td><span class="ems-badge ems-badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+          <td style="font-size:12px;color:var(--ems-text-secondary);">{{ req.submitted_at|date:"d M Y" }}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <a href="{% url 'leaves:hr_leave_detail' req.pk %}" class="ems-btn ems-btn-outline ems-btn-xs">
+                <i data-lucide="eye" style="width:12px;height:12px;"></i>
+              </a>
+              {% if req.status == 'PENDING' %}
+              <form method="post" action="{% url 'leaves:hr_leave_approve' req.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="ems-btn ems-btn-success ems-btn-xs" data-confirm="Approve this leave request?">
+                  <i data-lucide="check" style="width:12px;height:12px;"></i>
+                </button>
+              </form>
+              <form method="post" action="{% url 'leaves:hr_leave_reject' req.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="ems-btn ems-btn-danger ems-btn-xs" data-confirm="Reject this leave request?">
+                  <i data-lucide="x" style="width:12px;height:12px;"></i>
+                </button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8"><div class="ems-empty"><p>No leave requests found.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="p-3 border-top d-flex justify-content-center">
+    <nav><ul class="pagination pagination-sm mb-0">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search }}&status={{ status_filter }}&leave_type={{ type_filter }}">‹</a></li>{% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search }}&status={{ status_filter }}&leave_type={{ type_filter }}">›</a></li>{% endif %}
+    </ul></nav>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

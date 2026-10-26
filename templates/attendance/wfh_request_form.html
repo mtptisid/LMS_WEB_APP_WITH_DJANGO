@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}WFH Request{% endblock %}
+{% block content %}
+<div class="ems-page-header">
+  <h1 class="ems-page-title">Work From Home Request</h1>
+  <p class="ems-page-subtitle">Submit a WFH request for upcoming dates</p>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <h6 class="ems-card-title">New WFH Request</h6>
+        <a href="{% url 'attendance:home' %}" class="ems-btn ems-btn-outline ems-btn-sm">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back
+        </a>
+      </div>
+      <div class="ems-card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="ems-form-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+            {{ field }}
+            {% if field.errors %}<div class="text-danger mt-1" style="font-size:12px;">{{ field.errors|join:', ' }}</div>{% endif %}
+          </div>
+          {% endfor %}
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger" style="font-size:13px;">{{ form.non_field_errors }}</div>
+          {% endif %}
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="ems-btn ems-btn-primary">
+              <i data-lucide="send" style="width:16px;height:16px;"></i> Submit Request
+            </button>
+            <a href="{% url 'attendance:home' %}" class="ems-btn ems-btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

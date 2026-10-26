@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Apply Leave{% endblock %}
+{% block content %}
+<div class="ems-page-header">
+  <h1 class="ems-page-title">Apply for Leave</h1>
+  <p class="ems-page-subtitle">Submit a new leave request</p>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <h6 class="ems-card-title">Leave Request</h6>
+        <a href="{% url 'leaves:home' %}" class="ems-btn ems-btn-outline ems-btn-sm">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back
+        </a>
+      </div>
+      <div class="ems-card-body">
+        <!-- Balance data for JS -->
+        <script id="balances-data" type="application/json">{{ balances_json }}</script>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="ems-form-label">Leave Type *</label>
+            {{ form.leave_type }}
+            <div class="mt-1" id="leave-balance-display" style="font-size:12px;"></div>
+            {% if form.leave_type.errors %}<div class="text-danger" style="font-size:12px;">{{ form.leave_type.errors|join:', ' }}</div>{% endif %}
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6 mb-3">
+              <label class="ems-form-label">Start Date *</label>
+              {{ form.start_date }}
+              {% if form.start_date.errors %}<div class="text-danger" style="font-size:12px;">{{ form.start_date.errors|join:', ' }}</div>{% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="ems-form-label">End Date *</label>
+              {{ form.end_date }}
+              {% if form.end_date.errors %}<div class="text-danger" style="font-size:12px;">{{ form.end_date.errors|join:', ' }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="mb-1 p-2 rounded-2" style="background:var(--ems-primary-light);font-size:13px;font-weight:600;color:var(--ems-primary);" id="calculated-days"></div>
+          <div class="mb-3 mt-2">
+            <label class="ems-form-label">Half Day (optional)</label>
+            {{ form.start_half }}
+          </div>
+          <div class="mb-3">
+            <label class="ems-form-label">Reason</label>
+            {{ form.reason }}
+          </div>
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger" style="font-size:13px;">{{ form.non_field_errors }}</div>
+          {% endif %}
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="ems-btn ems-btn-primary">
+              <i data-lucide="send" style="width:16px;height:16px;"></i> Submit Request
+            </button>
+            <a href="{% url 'leaves:home' %}" class="ems-btn ems-btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

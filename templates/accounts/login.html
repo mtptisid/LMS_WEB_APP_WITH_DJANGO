@@ -1,0 +1,394 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — EMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    background: #f0f2ff;
+    overflow: hidden;
+  }
+
+  /* ── Left panel — brand / illustration ── */
+  .auth-left {
+    display: none;
+    flex: 1;
+    background: linear-gradient(145deg, #4240c4 0%, #5b5ef4 55%, #7c3aed 100%);
+    position: relative;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+  }
+  @media (min-width: 900px) { .auth-left { display: flex; } }
+
+  /* floating blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: .35;
+    animation: drift 8s ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 400px; height: 400px; background: #7c3aed; top: -100px; right: -80px; animation-delay: 0s; }
+  .blob-2 { width: 300px; height: 300px; background: #2563eb; bottom: -60px; left: -60px; animation-delay: -3s; }
+  .blob-3 { width: 200px; height: 200px; background: #ec4899; top: 40%; left: 40%; animation-delay: -6s; }
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(20px,30px) scale(1.05); } }
+
+  .auth-left-content { position: relative; z-index: 2; text-align: center; color: #fff; }
+
+  .auth-brand-logo {
+    width: 72px; height: 72px;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 900;
+    color: #fff;
+    margin: 0 auto 28px;
+  }
+
+  .auth-brand-name { font-size: 36px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 10px; }
+  .auth-brand-sub  { font-size: 15px; color: rgba(255,255,255,.75); max-width: 320px; margin: 0 auto 40px; line-height: 1.6; }
+
+  /* Feature badges on left */
+  .auth-features { display: flex; flex-direction: column; gap: 12px; }
+  .auth-feature {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #fff;
+    text-align: left;
+  }
+  .auth-feature-icon {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .auth-feature-text { font-size: 13px; font-weight: 500; }
+  .auth-feature-sub  { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 1px; }
+
+  /* ── Right panel — form ── */
+  .auth-right {
+    width: 100%;
+    max-width: 520px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+    box-shadow: -4px 0 40px rgba(0,0,0,.08);
+    position: relative;
+    overflow-y: auto;
+  }
+  @media (min-width: 900px) { .auth-right { min-height: 100vh; } }
+
+  .auth-form-wrap { width: 100%; max-width: 380px; }
+
+  .auth-logo-sm {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, #4240c4, #7c3aed);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 900; color: #fff;
+    margin-bottom: 28px;
+  }
+
+  .auth-title { font-size: 26px; font-weight: 800; color: #1a1d23; letter-spacing: -.4px; margin-bottom: 6px; }
+  .auth-sub   { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
+
+  /* Error banner */
+  .auth-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #991b1b;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 18px;
+  }
+  .auth-error svg { flex-shrink: 0; }
+
+  /* Form fields */
+  .form-group { margin-bottom: 16px; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: .02em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #1a1d23;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .form-input:focus {
+    border-color: #5b5ef4;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(91,94,244,.1);
+  }
+  .form-input.is-invalid { border-color: #ef4444; }
+  .form-input.is-invalid:focus { box-shadow: 0 0 0 4px rgba(239,68,68,.1); }
+
+  .form-error { font-size: 12px; color: #ef4444; margin-top: 4px; }
+
+  /* Password wrapper */
+  .pw-wrap { position: relative; }
+  .pw-wrap .form-input { padding-right: 44px; }
+  .pw-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: #9ca3af; padding: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: color .15s;
+  }
+  .pw-toggle:hover { color: #5b5ef4; }
+
+  /* Remember + submit */
+  .form-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .form-check-custom { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .form-check-custom input[type=checkbox] {
+    width: 16px; height: 16px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+    accent-color: #5b5ef4;
+    cursor: pointer;
+  }
+  .form-check-custom span { font-size: 13px; color: #6b7280; }
+
+  /* Submit button */
+  .btn-signin {
+    width: 100%;
+    height: 46px;
+    background: linear-gradient(135deg, #4240c4 0%, #5b5ef4 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity .15s, transform .1s;
+    box-shadow: 0 4px 14px rgba(91,94,244,.35);
+  }
+  .btn-signin:hover   { opacity: .92; transform: translateY(-1px); }
+  .btn-signin:active  { transform: translateY(0); }
+
+  /* Divider */
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0;
+    font-size: 12px; color: #9ca3af;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: ''; flex: 1; height: 1px; background: #e5e7eb;
+  }
+
+  /* Footer */
+  .auth-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #6b7280; }
+  .auth-footer a { color: #5b5ef4; font-weight: 600; text-decoration: none; }
+  .auth-footer a:hover { text-decoration: underline; }
+
+  /* Credentials hint box */
+  .auth-hint {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #0369a1;
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .auth-hint strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- LEFT — brand panel -->
+<div class="auth-left">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="auth-left-content">
+    <div class="auth-brand-logo">E</div>
+    <div class="auth-brand-name">EMS</div>
+    <div class="auth-brand-sub">
+      A complete Employee Management System — attendance, leaves, teams, and more — all in one place.
+    </div>
+    <div class="auth-features">
+      <div class="auth-feature">
+        <div class="auth-feature-icon">🕐</div>
+        <div>
+          <div class="auth-feature-text">Smart Attendance Tracking</div>
+          <div class="auth-feature-sub">Office &amp; WFH clock-in/out with real-time stats</div>
+        </div>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon">📅</div>
+        <div>
+          <div class="auth-feature-text">Leave Management</div>
+          <div class="auth-feature-sub">8 leave types, balance ledger, approvals</div>
+        </div>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon">🌿</div>
+        <div>
+          <div class="auth-feature-text">Team &amp; Org Hierarchy</div>
+          <div class="auth-feature-sub">Live org tree from reporting relationships</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT — form panel -->
+<div class="auth-right">
+  <div class="auth-form-wrap">
+
+    <div class="auth-logo-sm">E</div>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in to your EMS account</div>
+
+    <!-- Dev credentials hint -->
+    <div class="auth-hint">
+      <strong>Dev accounts:</strong><br>
+      HR: <strong>hr_admin</strong> / <strong>HR@company123</strong><br>
+      Employee: <strong>anjali.gupta</strong> / <strong>Employee@123</strong>
+    </div>
+
+    <!-- Error messages -->
+    {% if form.non_field_errors %}
+    <div class="auth-error">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      {{ form.non_field_errors|join:', ' }}
+    </div>
+    {% endif %}
+    {% for message in messages %}
+    {% if message.tags == 'danger' or message.tags == 'error' %}
+    <div class="auth-error">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <form method="post" novalidate autocomplete="on">
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div class="form-group">
+        <label class="form-label" for="id_username">Username</label>
+        <input
+          type="text"
+          id="id_username"
+          name="username"
+          class="form-input {% if form.username.errors %}is-invalid{% endif %}"
+          placeholder="Enter your username"
+          value="{{ form.username.value|default:'' }}"
+          autocomplete="username"
+          autofocus
+        >
+        {% if form.username.errors %}
+        <div class="form-error">{{ form.username.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="id_password">Password</label>
+        <div class="pw-wrap">
+          <input
+            type="password"
+            id="id_password"
+            name="password"
+            class="form-input {% if form.password.errors %}is-invalid{% endif %}"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+          <button type="button" class="pw-toggle" id="pwToggle" title="Show/hide password">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        {% if form.password.errors %}
+        <div class="form-error">{{ form.password.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Remember me -->
+      <div class="form-meta">
+        <label class="form-check-custom">
+          <input type="checkbox" name="remember_me" id="remember_me">
+          <span>Keep me signed in</span>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-signin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Sign In to EMS
+      </button>
+    </form>
+
+    <div class="auth-divider">or</div>
+
+    <div class="auth-footer">
+      Don't have an account?
+      <a href="{% url 'accounts:signup' %}">Create one</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Password show/hide
+var inp = document.getElementById('id_password');
+var btn = document.getElementById('pwToggle');
+var ico = document.getElementById('eyeIcon');
+btn.addEventListener('click', function () {
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    ico.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type = 'password';
+    ico.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+});
+</script>
+</body>
+</html>

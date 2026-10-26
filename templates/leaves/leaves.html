@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% block title %}Leaves{% endblock %}
+{% block page_title %}Leave Management{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── Per-leave-type doughnut cards (Keka style) ── */
+  var COLORS = [
+    { track: '#f87171', bg: '#fef2f2' },  /* Casual Leave    — coral red   */
+    { track: '#fb923c', bg: '#fff7ed' },  /* Sick Leave      — orange      */
+    { track: '#facc15', bg: '#fefce8' },  /* Paid Leave      — amber       */
+    { track: '#4ade80', bg: '#f0fdf4' },  /* Bereavement     — green       */
+    { track: '#38bdf8', bg: '#f0f9ff' },  /* Comp Off        — sky blue    */
+    { track: '#a78bfa', bg: '#f5f3ff' },  /* Carry Fwd PL    — violet      */
+    { track: '#f472b6', bg: '#fdf2f8' },  /* Wedding Leave   — pink        */
+    { track: '#34d399', bg: '#ecfdf5' },  /* Unpaid Leave    — emerald     */
+  ];
+
+  document.querySelectorAll('[data-donut-id]').forEach(function (canvas, idx) {
+    var total    = parseFloat(canvas.dataset.donutTotal)   || 0;
+    var consumed = parseFloat(canvas.dataset.donutConsumed) || 0;
+    var avail    = parseFloat(canvas.dataset.donutAvail)    || 0;
+    var clr      = COLORS[idx % COLORS.length];
+
+    /* segments: consumed (darker shade) + available (main color) + empty remainder */
+    var remaining = Math.max(0, total - consumed - Math.max(avail, 0));
+
+    var segments, backgrounds;
+    if (total <= 0) {
+      segments    = [1];
+      backgrounds = ['#e2e8f0'];
+    } else {
+      var c = Math.max(consumed, 0);
+      var a = Math.max(avail, 0);
+      var r = Math.max(0, total - c - a);
+      segments    = [a, c, r].map(function(v){ return Math.max(v, 0); });
+      /* available=main color, consumed=semi-transparent, remainder=light gray */
+      backgrounds = [clr.track, clr.track + '60', '#e2e8f0'];
+    }
+
+    new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: segments,
+          backgroundColor: backgrounds,
+          borderWidth: 0,
+          hoverOffset: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '72%',
+        animation: { duration: 700, easing: 'easeInOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+      }
+    });
+  });
+
+  /* ── Stats charts ── */
+  fetch('/leaves/chart-data/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      EMS.bar('chartMonthly', d.monthly.labels, [{
+        label: 'Days taken', data: d.monthly.data,
+        backgroundColor: '#5b5ef4', borderRadius: 6, borderSkipped: false,
+      }]);
+      EMS.bar('chartWeekly', d.weekly.labels, [{
+        label: 'Days', data: d.weekly.data,
+        backgroundColor: '#22c55e', borderRadius: 6, borderSkipped: false,
+      }]);
+      EMS.doughnut('chartType', d.by_type.labels, d.by_type.data);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Header ── -->
+<div class="ems-page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <h1 class="ems-page-title">Leaves</h1>
+    <p class="ems-page-sub">{% if period %}{{ period.name }}{% endif %}</p>
+  </div>
+  <a href="#" onclick="openLeaveDrawer(); return false;" class="ems-btn btn-primary">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Apply Leave
+  </a>
+</div>
+
+<!-- ── Summary stat cards ── -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ pending_count }}</div><div class="ems-stat-label">Pending</div></div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-success">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ approved_upcoming }}</div><div class="ems-stat-label">Upcoming</div></div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ total_available|floatformat:0 }}</div><div class="ems-stat-label">Available Days</div></div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-danger">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ total_taken_this_period|floatformat:0 }}</div><div class="ems-stat-label">Taken This Year</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MY LEAVE STATS — 3 charts (Keka style)
+══════════════════════════════════════════════════════ -->
+<div class="section-heading mb-3" style="font-size:16px;font-weight:800;color:var(--text);">My Leave Stats</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Weekly Pattern</span>
+      </div>
+      <div class="ems-card-body"><div class="chart-wrap"><canvas id="chartWeekly"></canvas></div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Consumed Leave Types</span>
+      </div>
+      <div class="ems-card-body"><div class="chart-wrap"><canvas id="chartType"></canvas></div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Monthly Stats ({{ today.year }})</span>
+      </div>
+      <div class="ems-card-body"><div class="chart-wrap"><canvas id="chartMonthly"></canvas></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     LEAVE BALANCES — Keka-style doughnut cards
+══════════════════════════════════════════════════════ -->
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div class="section-heading" style="font-size:16px;font-weight:800;color:var(--text);">Leave Balances</div>
+  <a href="{% url 'leaves:balance_detail' %}" class="ems-btn btn-outline btn-sm">Full Details</a>
+</div>
+
+{% if balances %}
+<div class="row g-3 mb-4">
+  {% for bal in balances %}
+  {% with avail=bal.available_balance total=bal.accrued_days consumed=bal.consumed_days %}
+  <div class="col-sm-6 col-lg-4 col-xl-3">
+    <div class="ems-card" style="overflow:hidden;">
+
+      <!-- Card header row -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;">
+        <span style="font-size:13px;font-weight:700;color:var(--text);">{{ bal.leave_type.name }}</span>
+        <a href="{% url 'leaves:balance_detail' %}" style="font-size:12px;font-weight:600;color:var(--primary);text-decoration:none;">View details</a>
+      </div>
+
+      <!-- Doughnut chart with center text -->
+      <div style="position:relative;width:160px;height:160px;margin:16px auto 8px;">
+        <canvas
+          data-donut-id="{{ forloop.counter }}"
+          data-donut-total="{{ total }}"
+          data-donut-consumed="{{ consumed }}"
+          data-donut-avail="{{ avail }}"
+          style="width:160px;height:160px;"
+        ></canvas>
+        <!-- Center label -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+          <span style="font-size:20px;font-weight:800;color:var(--text);line-height:1;">
+            {% if avail < 0 %}0{% else %}{{ avail|floatformat:0 }}{% endif %}
+          </span>
+          <span style="font-size:10px;font-weight:600;color:var(--text-3);margin-top:3px;text-align:center;line-height:1.3;">Days<br>Available</span>
+        </div>
+      </div>
+
+      <!-- Stats row below doughnut -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);margin:0 0 0;">
+
+        <!-- Available -->
+        <div style="padding:12px 14px;border-right:1px solid var(--border);">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:4px;">Available</div>
+          <div style="font-size:16px;font-weight:800;color:{% if avail > 0 %}var(--text){% else %}var(--danger){% endif %};">
+            {% if avail < 0 %}0{% else %}{{ avail|floatformat:0 }}{% endif %} <span style="font-size:11px;font-weight:500;color:var(--text-3);">days</span>
+          </div>
+        </div>
+
+        <!-- Consumed -->
+        <div style="padding:12px 14px;">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:4px;">Consumed</div>
+          <div style="font-size:16px;font-weight:800;color:{% if consumed > 0 %}#dc2626{% else %}var(--text){% endif %};">
+            {{ consumed|floatformat:0 }} <span style="font-size:11px;font-weight:500;color:var(--text-3);">days</span>
+          </div>
+        </div>
+
+        <!-- Annual Quota (full width) -->
+        <div style="padding:10px 14px;border-top:1px solid var(--border);grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:2px;">Annual Quota</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);">{{ total|floatformat:0 }} days</div>
+          </div>
+          <!-- Mini usage pill -->
+          {% if total > 0 %}
+          {% widthratio consumed total 100 as pct %}
+          <div style="text-align:right;">
+            <div style="font-size:11px;font-weight:700;color:{% if pct > 80 %}#dc2626{% elif pct > 50 %}#ca8a04{% else %}var(--primary){% endif %};">{{ pct }}%</div>
+            <div style="font-size:9px;color:var(--text-3);">used</div>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endwith %}
+  {% endfor %}
+</div>
+{% else %}
+<div class="ems-card mb-4">
+  <div class="ems-card-body">
+    <div class="ems-empty">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <h6>No Leave Balances</h6>
+      <p>Contact HR to set up your leave balances.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══════════════════════════════════════════════════════
+     LEAVE HISTORY TABLE
+══════════════════════════════════════════════════════ -->
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div class="section-heading" style="font-size:16px;font-weight:800;color:var(--text);">Leave History</div>
+  <span style="font-size:12px;color:var(--text-3);">{{ history_page.paginator.count }} records</span>
+</div>
+
+<!-- Filters -->
+<div class="ems-card mb-3">
+  <form method="get" class="p-3">
+    <div class="row g-2 align-items-center">
+      <div class="col-md-2">
+        <select name="leave_type" class="form-select" style="height:36px;font-size:12px;">
+          <option value="">All Types</option>
+          {% for lt in leave_types %}<option value="{{ lt.pk }}" {% if type_filter == lt.pk|stringformat:"s" %}selected{% endif %}>{{ lt.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="status" class="form-select" style="height:36px;font-size:12px;">
+          <option value="">All Status</option>
+          <option value="PENDING"   {% if status_filter == 'PENDING' %}selected{% endif %}>Pending</option>
+          <option value="APPROVED"  {% if status_filter == 'APPROVED' %}selected{% endif %}>Approved</option>
+          <option value="REJECTED"  {% if status_filter == 'REJECTED' %}selected{% endif %}>Rejected</option>
+          <option value="CANCELLED" {% if status_filter == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+        </select>
+      </div>
+      <div class="col-md-2"><input type="date" name="date_from" value="{{ date_from }}" class="form-control" style="height:36px;font-size:12px;"></div>
+      <div class="col-md-2"><input type="date" name="date_to"   value="{{ date_to }}"   class="form-control" style="height:36px;font-size:12px;"></div>
+      <div class="col-auto d-flex gap-2">
+        <button type="submit" class="ems-btn btn-primary btn-sm">Filter</button>
+        <a href="{% url 'leaves:home' %}" class="ems-btn btn-outline btn-sm">Clear</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="ems-card">
+  <div style="overflow-x:auto;">
+    <table class="ems-table">
+      <thead>
+        <tr>
+          <th>Leave Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Days</th>
+          <th>Status</th>
+          <th>Applied On</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for req in history_page %}
+        <tr>
+          <td>
+            <div style="font-weight:700;font-size:13px;">{{ req.leave_type.name }}</div>
+            {% if req.reason %}<div style="font-size:11px;color:var(--text-3);margin-top:1px;">{{ req.reason|truncatechars:40 }}</div>{% endif %}
+          </td>
+          <td style="font-size:13px;font-weight:500;">{{ req.start_date|date:"d M Y" }}</td>
+          <td style="font-size:13px;color:var(--text-2);">{{ req.end_date|date:"d M Y" }}</td>
+          <td>
+            <span style="font-size:14px;font-weight:800;color:var(--primary);">{{ req.duration_display }}</span>
+          </td>
+          <td><span class="ems-badge badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+          <td style="font-size:12px;color:var(--text-3);">{{ req.submitted_at|date:"d M Y" }}</td>
+          <td>
+            {% if req.status == 'PENDING' or req.status == 'APPROVED' %}
+            <form method="post" action="{% url 'leaves:cancel' req.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="ems-btn btn-outline btn-xs" style="color:#dc2626;border-color:#fecaca;" data-confirm="Cancel this leave request?">Cancel</button>
+            </form>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">
+          <div class="ems-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <h6>No leave history</h6>
+            <p>You haven't applied for any leaves yet.</p>
+            <a href="{% url 'leaves:request' %}" class="ems-btn btn-primary btn-sm mt-2">Apply Now</a>
+          </div>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if history_page.has_other_pages %}
+  <div class="p-3 d-flex justify-content-between align-items-center" style="border-top:1px solid var(--border);">
+    <span style="font-size:12px;color:var(--text-3);">Page {{ history_page.number }} of {{ history_page.paginator.num_pages }}</span>
+    <nav><ul class="pagination pagination-sm mb-0">
+      {% if history_page.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ history_page.previous_page_number }}&leave_type={{ type_filter }}&status={{ status_filter }}&date_from={{ date_from }}&date_to={{ date_to }}">‹</a></li>
+      {% endif %}
+      {% if history_page.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ history_page.next_page_number }}&leave_type={{ type_filter }}&status={{ status_filter }}&date_from={{ date_from }}&date_to={{ date_to }}">›</a></li>
+      {% endif %}
+    </ul></nav>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

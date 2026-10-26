@@ -1,0 +1,430 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Welcome banner ── */
+.welcome-banner {
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e2a78 0%, #3730a3 40%, #1e40af 70%, #0e7490 100%);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  min-height: 90px;
+}
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.welcome-banner h2 {
+  color: #fff; font-weight: 800; font-size: 22px;
+  margin: 0; position: relative; z-index: 1;
+}
+.welcome-banner p {
+  color: rgba(255,255,255,.7); font-size: 13px;
+  margin: 4px 0 0; position: relative; z-index: 1;
+}
+
+/* ── Quick Access widget (Keka teal card) ── */
+.quick-access-widget {
+  background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: #fff;
+  margin-bottom: 12px;
+  position: relative;
+}
+.qa-time-label {
+  font-size: 11px; font-weight: 600; opacity: .8; margin-bottom: 4px;
+}
+.qa-time {
+  font-size: 28px; font-weight: 800; letter-spacing: -.5px;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.qa-time-ampm { font-size: 14px; font-weight: 600; opacity: .8; }
+.qa-date { font-size: 11px; opacity: .75; margin-top: 4px; }
+
+/* ── Holiday widget (Keka red/orange) ── */
+.holiday-widget {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #fff;
+  margin-bottom: 12px;
+  position: relative; overflow: hidden;
+}
+.holiday-widget .hw-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; opacity: .8; margin-bottom: 4px; }
+.holiday-widget .hw-name { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.holiday-widget .hw-date { font-size: 11px; opacity: .8; margin-top: 4px; }
+.holiday-badge {
+  display: inline-block; background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.4);
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  margin-top: 6px;
+}
+
+/* ── Leave balance mini ── */
+.lb-donut-sm {
+  width: 72px; height: 72px;
+  position: relative;
+}
+.lb-center-text {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.lb-center-num { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1; }
+.lb-center-lbl { font-size: 8px; font-weight: 600; color: var(--text-3); text-align: center; }
+
+/* ── Wall / Feed ── */
+.wall-write-box {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px; color: var(--text-3);
+  cursor: text; background: #fafbfc;
+  transition: border-color .15s;
+}
+.wall-write-box:hover { border-color: var(--primary); background: #fff; }
+
+.wall-tab-btn {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  border: none; background: none;
+  color: var(--text-2); cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.wall-tab-btn.active { background: var(--primary-light); color: var(--primary); }
+
+/* ── Birthday cards ── */
+.birthday-card {
+  text-align: center; min-width: 72px;
+}
+.birthday-card .ba { width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: #fff; }
+.birthday-card .bn { font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.birthday-card .bt { font-size: 10px; color: var(--text-3); }
+
+/* ── Who's off ── */
+.off-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 20px;
+  background: #fee2e2; color: #991b1b;
+  font-size: 12px; font-weight: 600; margin: 3px;
+}
+
+/* ── Upcoming holiday list ── */
+.holiday-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.holiday-row:last-child { border-bottom: none; }
+.holiday-date-box { min-width: 42px; text-align: center; }
+.hd-day { font-size: 20px; font-weight: 800; color: var(--primary); line-height: 1; }
+.hd-month { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* Live clock for quick-access widget */
+function dashClock() {
+  var now = new Date();
+  var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12 = h % 12 || 12;
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  var el = document.getElementById('dashTime');
+  if (el) el.innerHTML = pad(h12) + ':' + pad(m) + '<span class="qa-time-ampm"> ' + pad(s) + ' ' + ampm + '</span>';
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dl = document.getElementById('dashDate');
+  if (dl) dl.textContent = days[now.getDay()] + ', ' + String(now.getDate()).padStart(2,'0') + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+}
+dashClock();
+setInterval(dashClock, 1000);
+
+/* Small leave balance donuts */
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-lb-canvas]').forEach(function (canvas, idx) {
+    var avail    = parseFloat(canvas.dataset.lbAvail)    || 0;
+    var consumed = parseFloat(canvas.dataset.lbConsumed) || 0;
+    var total    = parseFloat(canvas.dataset.lbTotal)    || 1;
+    var COLORS   = ['#06b6d4','#f59e0b','#10b981','#5b5ef4','#ec4899','#f97316','#8b5cf6','#ef4444'];
+    var clr = COLORS[idx % COLORS.length];
+    new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [Math.max(avail,0), Math.max(consumed,0), Math.max(total-avail-consumed,0)],
+          backgroundColor: [clr, clr+'50', '#e8eaed'],
+          borderWidth: 0, hoverOffset: 0,
+        }]
+      },
+      options: {
+        responsive: false, maintainAspectRatio: false,
+        cutout: '70%', animation: { duration: 600 },
+        plugins: { legend: { display: false }, tooltip: { enabled: false } }
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+{% if not profile %}
+<div class="ems-card"><div class="ems-card-body"><div class="ems-empty">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+  <h6>Profile Not Set Up</h6><p>Your employee profile hasn't been created yet. Please contact HR.</p>
+</div></div></div>
+{% else %}
+
+<!-- ── Welcome banner (Keka style) ── -->
+<div class="welcome-banner">
+  <h2>Welcome {{ user.get_full_name|default:user.username }}!</h2>
+  <p>{{ today|date:"l, F j, Y" }} &nbsp;·&nbsp; {{ profile.designation.title|default:"Employee" }} &nbsp;·&nbsp; {{ profile.department.name|default:"" }}</p>
+</div>
+
+<div class="row g-3">
+
+  <!-- ════════════════════════════════
+       LEFT COLUMN — Quick Access
+  ════════════════════════════════ -->
+  <div class="col-lg-4">
+
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+      Quick Access
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;color:var(--text-3);"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    </div>
+
+    <!-- Time + Clock-in widget (Keka teal) -->
+    <div class="quick-access-widget">
+      <div class="qa-time-label">Time Today — {{ today|date:"D, d M Y" }} &nbsp;<a href="{% url 'attendance:home' %}" style="color:rgba(255,255,255,.8);font-size:11px;float:right;">View All</a></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div>
+          <div style="font-size:11px;opacity:.75;margin-bottom:2px;">CURRENT TIME</div>
+          <div class="qa-time" id="dashTime">--:-- <span class="qa-time-ampm">-- --</span></div>
+          <div class="qa-date" id="dashDate"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          {% if open_session %}
+          <form method="post" action="{% url 'attendance:clock_out' %}">
+            {% csrf_token %}
+            <button type="submit" style="background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;" data-confirm="Clock out now?">Clock Out</button>
+          </form>
+          <span style="font-size:10px;opacity:.75;">Since {{ open_session.clock_in_at|time:"h:i A" }} · {{ open_session.work_mode }}</span>
+          {% else %}
+          <form method="post" action="{% url 'attendance:clock_in' %}">
+            {% csrf_token %}
+            <input type="hidden" name="work_mode" value="OFFICE">
+            <button type="submit" style="background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">Web Clock-In</button>
+          </form>
+          {% if wfh_approved_today %}
+          <form method="post" action="{% url 'attendance:clock_in' %}">
+            {% csrf_token %}
+            <input type="hidden" name="work_mode" value="WFH">
+            <button type="submit" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">WFH Clock-In</button>
+          </form>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming holiday widget (Keka red) -->
+    {% for holiday in upcoming_holidays %}
+    {% if forloop.first %}
+    <div class="holiday-widget">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="hw-label">Holidays &nbsp;<a href="#" style="color:rgba(255,255,255,.7);font-size:11px;">View All</a></div>
+      </div>
+      <div class="hw-name">{{ holiday.name }}</div>
+      <div class="hw-date">{{ holiday.date|date:"D, d F Y" }}</div>
+      <div class="holiday-badge">{{ holiday.get_holiday_type_display|upper }}</div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <div style="background:#f8f9fa;border-radius:12px;padding:14px 18px;margin-bottom:12px;">
+      <div style="font-size:12px;color:var(--text-3);">No upcoming holidays</div>
+    </div>
+    {% endfor %}
+
+    <!-- Leave Balances mini section -->
+    <div class="ems-card mb-3">
+      <div class="ems-card-header" style="padding:14px 16px;">
+        <span style="font-size:13px;font-weight:700;">Leave Balances</span>
+        <div style="display:flex;gap:8px;">
+          <a href="#" onclick="openLeaveDrawer(); return false;" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">Request Leave</a>
+          <span style="color:var(--border);">·</span>
+          <a href="{% url 'leaves:balance_detail' %}" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">View All Balances</a>
+        </div>
+      </div>
+      <div class="ems-card-body" style="padding:12px 16px;">
+        <div class="d-flex flex-wrap gap-3">
+          {% for bal in leave_balances %}
+          <div style="text-align:center;">
+            <div class="lb-donut-sm">
+              <canvas data-lb-canvas="1"
+                      data-lb-avail="{{ bal.available_balance }}"
+                      data-lb-consumed="{{ bal.consumed_days }}"
+                      data-lb-total="{{ bal.accrued_days }}"
+                      style="width:72px;height:72px;"></canvas>
+              <div class="lb-center-text">
+                <span class="lb-center-num">{{ bal.available_balance|floatformat:0 }}</span>
+                <span style="font-size:7px;color:var(--text-3);font-weight:600;">Days</span>
+              </div>
+            </div>
+            <div style="font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-top:4px;max-width:72px;line-height:1.2;">{{ bal.leave_type.name|truncatechars:12 }}</div>
+          </div>
+          {% empty %}
+          <span style="font-size:12px;color:var(--text-3);">No balances configured.</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick action shortcuts -->
+    <div class="ems-card">
+      <div class="ems-card-body" style="padding:12px 16px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-bottom:10px;">Quick Links</div>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" onclick="openLeaveDrawer(); return false;" class="ems-btn btn-outline btn-sm">📅 Apply Leave</a>
+          <a href="#" onclick="openWFHDrawer(); return false;" class="ems-btn btn-outline btn-sm">🏠 Apply WFH</a>
+          <a href="{% url 'attendance:correction_request' %}" class="ems-btn btn-outline btn-sm">✏️ Regularize</a>
+          <a href="{% url 'leaves:balance_detail' %}" class="ems-btn btn-outline btn-sm">📊 Leave Balance</a>
+          <a href="{% url 'teams:home' %}" class="ems-btn btn-outline btn-sm">👥 My Team</a>
+          <a href="{% url 'employees:profile' %}" class="ems-btn btn-outline btn-sm">👤 My Profile</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left col -->
+
+  <!-- ════════════════════════════════
+       RIGHT COLUMN — Wall / Feed
+  ════════════════════════════════ -->
+  <div class="col-lg-8">
+
+    <!-- Org / Team breadcrumb tabs -->
+    <div class="d-flex gap-2 mb-3">
+      <span style="padding:6px 14px;border:1.5px solid var(--primary);border-radius:8px;font-size:13px;font-weight:700;color:var(--primary);background:var(--primary-light);">Organisation</span>
+      {% if profile.designation %}
+      <span style="padding:6px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-2);">{{ profile.department.name|default:"Team" }} › {{ profile.designation.title }}</span>
+      {% endif %}
+    </div>
+
+    <!-- Wall post box -->
+    <div class="ems-card mb-3">
+      <div class="ems-card-header" style="padding:14px 16px;">
+        <div class="d-flex gap-1">
+          <button class="wall-tab-btn active">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Post
+          </button>
+          <button class="wall-tab-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Poll
+          </button>
+          <button class="wall-tab-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Praise
+          </button>
+        </div>
+      </div>
+      <div class="ems-card-body">
+        <div class="wall-write-box" style="font-size:13px;color:var(--text-3);">
+          Write your post here and mention your peers…
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="ems-card mb-3">
+      <div class="ems-card-body" style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;color:var(--text-3);">No announcements</span>
+        <a href="#" style="width:28px;height:28px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Birthdays / Anniversaries / New Joiners -->
+    <div class="ems-card mb-3">
+      <div class="ems-card-header">
+        <div class="d-flex gap-3 flex-wrap">
+          <span style="font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;">
+            🎂 <span style="color:var(--primary);border-bottom:2px solid var(--primary);padding-bottom:2px;">0 Birthdays</span>
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:5px;">
+            🏆 {{ anniversary_count|default:"0" }} Work Anniversaries
+          </span>
+          <span style="font-size:12px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:5px;">
+            👋 {{ new_joiners_count|default:"0" }} New Joinees
+          </span>
+        </div>
+      </div>
+      <div class="ems-card-body">
+        <!-- Team members on leave today -->
+        {% if team_on_leave %}
+        <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px;">Team on Leave Today</div>
+        <div class="d-flex flex-wrap gap-3">
+          {% for item in team_on_leave %}
+          <div class="birthday-card">
+            <div class="ba" style="background:var(--primary);">{{ item.employee.get_initials }}</div>
+            <div class="bn">{{ item.employee.user.first_name }}</div>
+            <div class="bt">{{ item.leave.leave_type.name|truncatechars:10 }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <!-- Upcoming leaves / teammates -->
+        <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px;">Team Members</div>
+        <div class="d-flex flex-wrap gap-3">
+          {% for emp in team_members %}
+          <div class="birthday-card">
+            <div class="ba" style="background:{{ emp.avatar_color|default:'var(--primary)' }};">{{ emp.get_initials }}</div>
+            <div class="bn">{{ emp.user.first_name }}</div>
+            <div class="bt">{{ emp.designation.title|truncatechars:12|default:"Employee" }}</div>
+          </div>
+          {% empty %}
+          <div class="ems-empty" style="padding:16px 0;">
+            <p style="font-size:12px;">No birthdays today.</p>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Upcoming Holidays list -->
+    {% if upcoming_holidays %}
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Upcoming Holidays</span>
+        <a href="#" style="font-size:12px;color:var(--primary);font-weight:600;text-decoration:none;">View Calendar</a>
+      </div>
+      <div class="ems-card-body" style="padding-top:8px;">
+        {% for holiday in upcoming_holidays|slice:":5" %}
+        <div class="holiday-row">
+          <div class="holiday-date-box">
+            <div class="hd-day">{{ holiday.date|date:"d" }}</div>
+            <div class="hd-month">{{ holiday.date|date:"M" }}</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;">{{ holiday.name }}</div>
+            <div style="font-size:11px;color:var(--text-3);">{{ holiday.date|date:"l" }} · {{ holiday.get_holiday_type_display }}</div>
+          </div>
+          <div class="ms-auto">
+            <span class="ems-badge" style="background:#fef3c7;color:#92400e;font-size:10px;">{{ holiday.get_holiday_type_display }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- /right col -->
+</div>
+
+{% endif %}
+{% endblock %}

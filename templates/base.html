@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}EMS{% endblock %} — Employee Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{% static 'css/ems.css' %}" rel="stylesheet">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if user.is_authenticated %}
+
+<!-- ╔══════════════════════════════════════════════╗
+     ║  SIDEBAR — Keka style (icon-only + tooltip) ║
+     ╚══════════════════════════════════════════════╝ -->
+<aside class="ems-sidebar" id="emsSidebar">
+<div class="ems-sidebar-inner">
+
+  <a href="{% url 'core:dashboard_redirect' %}" class="ems-sidebar-logo" data-tip="EMS Home">E</a>
+  <div class="ems-sidebar-divider"></div>
+
+  <!-- Home -->
+  <div class="ems-nav-item">
+    <a href="{% url 'employees:dashboard' %}"
+       class="ems-nav-link {% if request.resolver_match.url_name == 'dashboard' and request.resolver_match.namespace == 'employees' %}active{% endif %}"
+       data-tip="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Home</span>
+    </a>
+  </div>
+  <!-- Me -->
+  <div class="ems-nav-item">
+    <a href="{% url 'employees:profile' %}"
+       class="ems-nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"
+       data-tip="Me">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-label">Me</span>
+    </a>
+  </div>
+  <!-- My Team -->
+  <div class="ems-nav-item">
+    <a href="{% url 'teams:home' %}"
+       class="ems-nav-link {% if request.resolver_match.namespace == 'teams' %}active{% endif %}"
+       data-tip="My Team">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="nav-label">My Team</span>
+    </a>
+  </div>
+  <!-- My Finances -->
+  <div class="ems-nav-item">
+    <a href="{% url 'employees:finances' %}"
+       class="ems-nav-link {% if request.resolver_match.url_name == 'finances' %}active{% endif %}"
+       data-tip="My Finances">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span class="nav-label">My Finances</span>
+    </a>
+  </div>
+
+  <div class="ems-sidebar-divider"></div>
+
+  <!-- Org -->
+  <div class="ems-nav-item">
+    <a href="{% url 'teams:home' %}?view=org"
+       class="ems-nav-link"
+       data-tip="Org">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="15" y="2" width="7" height="7" rx="1"/><rect x="8.5" y="15" width="7" height="7" rx="1"/><line x1="5.5" y1="9" x2="5.5" y2="12"/><line x1="18.5" y1="9" x2="18.5" y2="12"/><line x1="5.5" y1="12" x2="18.5" y2="12"/><line x1="12" y1="12" x2="12" y2="15"/></svg>
+      <span class="nav-label">Org</span>
+    </a>
+  </div>
+
+  <!-- Time & Attend -->
+  <div class="ems-nav-item">
+    <a href="{% url 'attendance:home' %}"
+       class="ems-nav-link {% if request.resolver_match.namespace == 'attendance' and 'hr' not in request.path %}active{% endif %}"
+       data-tip="Time Attend">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="nav-label">Time Attend</span>
+    </a>
+  </div>
+  <!-- Leave -->
+  <div class="ems-nav-item">
+    <a href="{% url 'leaves:home' %}"
+       class="ems-nav-link {% if request.resolver_match.namespace == 'leaves' and 'hr' not in request.path %}active{% endif %}"
+       data-tip="Leave">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="nav-label">Leave</span>
+    </a>
+  </div>
+
+  <!-- HR section -->
+  {% if is_hr_user %}
+  <div class="ems-sidebar-divider"></div>
+  <div class="ems-nav-item">
+    <a href="{% url 'core:hr_dashboard' %}"
+       class="ems-nav-link {% if 'hr/dashboard' in request.path %}active{% endif %}"
+       data-tip="HR Dashboard">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </a>
+  </div>
+  <div class="ems-nav-item">
+    <a href="{% url 'employees:hr_employee_list' %}"
+       class="ems-nav-link {% if 'employees/hr' in request.path %}active{% endif %}"
+       data-tip="Employees">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="nav-label">Employees</span>
+    </a>
+  </div>
+  <div class="ems-nav-item">
+    <a href="{% url 'leaves:hr_leave_list' %}"
+       class="ems-nav-link {% if 'leaves/hr' in request.path %}active{% endif %}"
+       data-tip="Leave Approvals">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span class="nav-label">Approve</span>
+    </a>
+  </div>
+  <div class="ems-nav-item">
+    <a href="{% url 'attendance:hr_wfh_list' %}"
+       class="ems-nav-link {% if 'attendance/hr' in request.path %}active{% endif %}"
+       data-tip="WFH Requests">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">WFH</span>
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Logout at bottom -->
+  <div class="ems-sidebar-bottom">
+    <div class="ems-nav-item">
+      <a href="{% url 'accounts:logout' %}" class="ems-nav-link" data-tip="Logout" onclick="return confirm('Sign out of EMS?')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span class="nav-label">Logout</span>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /ems-sidebar-inner -->
+</aside>
+
+<!-- ╔══════════════════════════════╗
+     ║  MAIN CONTENT               ║
+     ╚══════════════════════════════╝ -->
+<div class="ems-main">
+
+  <!-- ── TOP NAVBAR ── -->
+  <header class="ems-navbar">
+    <button class="ems-icon-btn d-md-none" id="sidebarToggle" style="border:none;background:none;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Breadcrumb / page title -->
+    <div class="ems-navbar-title d-none d-lg-block">{% block page_title %}{% endblock %}</div>
+
+    <!-- Search -->
+    <form action="{% url 'core:search' %}" method="get" class="ems-search-wrap">
+      <span class="ems-search-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" name="q" class="ems-search-input" placeholder="Search employees, actions…" value="{{ request.GET.q|default:'' }}" autocomplete="off">
+    </form>
+
+    <div class="ems-navbar-spacer"></div>
+
+    <div class="ems-navbar-actions">
+      <!-- Notifications bell -->
+      <a href="{% url 'notifications:list' %}" class="ems-icon-btn" title="Notifications">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        {% if unread_notification_count > 0 %}<span class="ems-notif-badge">{{ unread_notification_count }}</span>{% endif %}
+      </a>
+
+      <!-- User dropdown -->
+      <div class="dropdown">
+        <a class="ems-user-chip dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="ems-avatar">
+            {% if employee_profile %}{{ employee_profile.get_initials }}{% else %}{{ user.username|slice:":2"|upper }}{% endif %}
+          </div>
+          <div class="d-none d-sm-block">
+            <div class="ems-user-name">{{ user.get_full_name|default:user.username }}</div>
+            <div class="ems-user-role">{% if is_hr_user %}HR{% else %}Employee{% endif %}</div>
+          </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width:210px;border-radius:14px;padding:10px;margin-top:8px;">
+          <li class="px-2 py-1 mb-2">
+            <div class="d-flex align-items-center gap-2">
+              <div class="ems-avatar" style="width:36px;height:36px;border-radius:50%;font-size:14px;">
+                {% if employee_profile %}{{ employee_profile.get_initials }}{% else %}{{ user.username|slice:":2"|upper }}{% endif %}
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:13px;">{{ user.get_full_name|default:user.username }}</div>
+                <div style="font-size:11px;color:var(--text-3);">{{ user.username }}</div>
+              </div>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider my-1"></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="{% url 'employees:profile' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;margin-right:8px;"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>View Profile
+          </a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="{% url 'employees:profile' %}?tab=edit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;margin-right:8px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Change Password
+          </a></li>
+          {% if is_hr_user %}
+          <li><a class="dropdown-item rounded-2 py-2" href="{% url 'core:hr_dashboard' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;margin-right:8px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>HR Dashboard
+          </a></li>
+          {% endif %}
+          <li><hr class="dropdown-divider my-1"></li>
+          <li><a class="dropdown-item rounded-2 py-2 text-danger" href="{% url 'accounts:logout' %}" onclick="return confirm('Sign out?')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;margin-right:8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE CONTENT -->
+  <main class="ems-content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+{% else %}
+  {% block auth_content %}{% endblock %}
+{% endif %}
+
+<!-- TOAST MESSAGES -->
+<div class="toast-wrap" id="toastWrap">
+  {% for message in messages %}
+  <div class="ems-toast toast-{{ message.tags }}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;flex-shrink:0;margin-top:1px;">
+      {% if message.tags == 'success' %}<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      {% elif message.tags == 'danger' %}<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+      {% else %}<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>{% endif %}
+    </svg>
+    <span>{{ message }}</span>
+    <button class="toast-close" onclick="this.closest('.ems-toast').remove()">✕</button>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- ══ RIGHT DRAWER (exact reference sample) ══ -->
+<div class="ems-overlay" id="emsOverlay"></div>
+<aside class="ems-drawer" id="emsDrawer" role="dialog" aria-modal="true" aria-labelledby="emsDrawerTitle" aria-hidden="true">
+  <div class="ems-drawer-head">
+    <h3 id="emsDrawerTitle">Apply</h3>
+    <button class="ems-drawer-close" id="emsDrawerClose" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></svg>
+    </button>
+  </div>
+  <div class="ems-drawer-body" id="emsDrawerBody">
+    <!-- Content loaded by JS -->
+  </div>
+  <div class="ems-drawer-foot" id="emsDrawerFoot" style="display:none;">
+    <button class="db-cancel" id="emsDrawerCancel" type="button">Cancel</button>
+    <button class="db-submit" id="emsDrawerSubmit" type="button">Submit</button>
+  </div>
+</aside>
+<div class="ems-toast-bottom" id="emsToastBottom"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="{% static 'js/ems.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

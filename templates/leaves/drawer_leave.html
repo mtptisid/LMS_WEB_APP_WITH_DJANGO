@@ -1,0 +1,124 @@
+{% load static %}
+{# Partial — loaded inside the right drawer via fetch(). No base.html needed. #}
+
+{# Balances JSON — read by drawer JS to show balance notes #}
+<script id="df-balances" type="application/json">{{ balances_json }}</script>
+
+<!-- Leave type -->
+<div class="df">
+  <label for="df-leaveType">Leave type <span class="req">*</span></label>
+  <select class="dc" id="df-leaveType" name="leave_type">
+    {% for lt in form.leave_type.field.queryset %}
+    <option value="{{ lt.pk }}">{{ lt.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- From / To dates -->
+<div class="df-row">
+  <div class="df">
+    <label for="df-fromDate">From <span class="req">*</span></label>
+    <input class="dc" type="date" id="df-fromDate" name="start_date">
+  </div>
+  <div class="df">
+    <label for="df-toDate">To <span class="req">*</span></label>
+    <input class="dc" type="date" id="df-toDate" name="end_date">
+  </div>
+</div>
+
+<!-- Half day -->
+<div class="df">
+  <span class="df-label">Is this a half day?</span>
+  <div class="df-radios">
+    <label class="df-radio"><input type="radio" name="df-half" value="yes"> Yes</label>
+    <label class="df-radio"><input type="radio" name="df-half" value="no" checked> No</label>
+  </div>
+</div>
+
+<!-- Which half (shown only when half-day selected) -->
+<div class="df" id="df-halfField" style="display:none;">
+  <label for="df-session">Which half?</label>
+  <select class="dc" id="df-session" style="max-width:260px;">
+    <option value="First half">First half</option>
+    <option value="Second half">Second half</option>
+  </select>
+</div>
+
+<!-- Number of days -->
+<div class="df">
+  <span class="df-label">Number of days</span>
+  <div class="df-days-out" id="df-daysOut">—</div>
+</div>
+
+<!-- Reason -->
+<div class="df">
+  <label for="df-reason">Reason for leave <span class="req">*</span></label>
+  <textarea class="dc" id="df-reason" name="reason" placeholder="Type here"></textarea>
+  <div class="df-error" id="df-reasonError"></div>
+</div>
+
+<!-- Balance note -->
+<div class="df-note" id="df-note" aria-live="polite">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>
+  <span id="df-noteText">Select a leave type and dates to see your balance.</span>
+</div>
+
+<!-- Additional comment -->
+<div class="df">
+  <label for="df-comment">Additional comment</label>
+  <textarea class="dc" id="df-comment" name="comment" placeholder="Type here" style="min-height:70px;"></textarea>
+</div>
+
+<style>
+/* Scoped drawer field styles — exact reference sample */
+.ems-drawer-body { gap: 22px !important; }
+.df { display: flex; flex-direction: column; }
+.df label, .df-label {
+  display: block; font-size: 14px; font-weight: 500;
+  margin-bottom: 10px; color: #1d2433;
+  font-family: 'Poppins', sans-serif;
+}
+.req { color: #f25b5b; }
+.df-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dc {
+  width: 100%; border: 1px solid #d9dde5; border-radius: 4px;
+  padding: 11px 14px; background: #fff; outline: 0;
+  font-size: 14px; font-family: 'Poppins', sans-serif; color: #1d2433;
+  box-sizing: border-box;
+}
+.dc:focus { border-color: #4b3fa8; box-shadow: 0 0 0 3px #eeebfa; }
+textarea.dc { resize: vertical; min-height: 96px; }
+select.dc {
+  appearance: none; padding-right: 40px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231d2433' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+.df-radios { display: flex; gap: 28px; }
+.df-radio { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-family: 'Poppins', sans-serif; }
+.df-radio input[type=radio] {
+  appearance: none; width: 20px; height: 20px;
+  border: 1.5px solid #8b93a3; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer; margin: 0;
+}
+.df-radio input[type=radio]::after {
+  content: ""; width: 10px; height: 10px; border-radius: 50%;
+  background: #4b3fa8; transform: scale(0); transition: transform .12s;
+}
+.df-radio input[type=radio]:checked { border-color: #4b3fa8; }
+.df-radio input[type=radio]:checked::after { transform: scale(1); }
+.df-days-out {
+  padding: 11px 14px; border-radius: 4px; background: #f1f4f8;
+  font-weight: 500; min-height: 44px; display: flex; align-items: center;
+  font-size: 14px; color: #1d2433;
+}
+.df-note {
+  display: flex; gap: 12px; background: #f1f4f8;
+  border: 1px solid #e6eaf0; border-radius: 8px;
+  padding: 16px 18px; line-height: 1.6; font-size: 13px; color: #4b5563;
+}
+.df-note svg { width: 18px; height: 18px; flex: none; margin-top: 2px; stroke: #7b8596; fill: none; stroke-width: 1.6; }
+.df-note.warn { background: #fff4f2; border-color: #f7d3cd; }
+.df-note.warn svg { stroke: #f25b5b; }
+.df-error { color: #f25b5b; font-size: 12px; margin-top: 6px; }
+@media (max-width: 520px) { .df-row { grid-template-columns: 1fr; } }
+</style>

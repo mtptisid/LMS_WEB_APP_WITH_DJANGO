@@ -1,0 +1,652 @@
+{% extends 'base.html' %}
+{% block title %}Attendance{% endblock %}
+{% block page_title %}Attendance{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Live clock ── */
+#liveClock {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+#liveDate { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+/* ── Weekday pills ── */
+.weekday-pills { display: flex; gap: 6px; }
+.wd-pill {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 1.5px solid var(--border);
+  color: var(--text-3);
+  cursor: default;
+}
+.wd-pill.working { color: var(--text-2); }
+.wd-pill.today {
+  background: var(--primary); color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(91,94,244,.4);
+}
+.wd-pill.off { background: #f8f9fa; color: var(--text-3); }
+
+/* ── Shift progress bar ── */
+.shift-progress-bar {
+  height: 8px;
+  background: #e8eaed;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+.shift-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #5b5ef4);
+  border-radius: 4px;
+  transition: width .5s ease;
+}
+
+/* ── Stats table ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: center;
+  gap: 0;
+}
+.stats-row + .stats-row { border-top: 1px solid var(--border); }
+.stats-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px;
+}
+.stats-val { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1; }
+.stats-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); margin-bottom: 4px; }
+
+/* ── Action buttons (Keka style links with icons) ── */
+.action-links { display: flex; flex-direction: column; gap: 10px; }
+.action-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  font-size: 13px; font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+  background: #fff;
+  transition: all .15s;
+}
+.action-link:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.action-link.active-session { border-color: #ef4444; color: #dc2626; background: #fef2f2; }
+.action-link.wfh-active { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+.action-link.disabled { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.action-link .al-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+/* ── Period pills ── */
+.period-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+.period-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1.5px solid var(--border);
+  color: var(--text-2);
+  background: #fff;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.period-pill:hover { border-color: var(--primary); color: var(--primary); }
+.period-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ── Attendance visual bar (like Keka's row timeline) ── */
+.att-visual {
+  height: 6px;
+  background: #e8eaed;
+  border-radius: 3px;
+  width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+.att-visual-fill {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #5b5ef4);
+  border-radius: 3px;
+}
+.att-visual-wfh .att-visual-fill { background: linear-gradient(90deg, #7c3aed, #a855f7); }
+
+/* ── Section heading ── */
+.section-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 0; }
+
+/* Log table row highlight */
+.log-today { background: #fafbff !important; }
+.log-weekend td { color: var(--text-3) !important; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* Live clock */
+function updateClock() {
+  var now = new Date();
+  var h = now.getHours();
+  var m = String(now.getMinutes()).padStart(2, '0');
+  var s = String(now.getSeconds()).padStart(2, '0');
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12 = h % 12 || 12;
+  var el = document.getElementById('liveClock');
+  if (el) el.innerHTML = String(h12).padStart(2,'0') + ':' + m + ':' + s + '<span style="font-size:14px;font-weight:600;margin-left:4px;color:var(--text-3);">' + ampm + '</span>';
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var dl = document.getElementById('liveDate');
+  if (dl) dl.textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* Charts */
+document.addEventListener('DOMContentLoaded', function () {
+  fetch('/attendance/chart-data/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      EMS.bar('chartDaily', d.daily.labels, [
+        { label: 'Gross Hrs', data: d.daily.gross, backgroundColor: 'rgba(91,94,244,.2)', borderColor: '#5b5ef4', borderWidth: 2, borderRadius: 4, borderSkipped: false },
+        { label: 'Effective Hrs', data: d.daily.effective, backgroundColor: '#5b5ef4', borderRadius: 4, borderSkipped: false },
+      ]);
+      EMS.doughnut('chartMode', d.mode.labels, d.mode.data);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- ════════════════════════════════════════════════════
+     TOP SECTION: 3-column Keka layout
+     Col 1: Attendance Stats
+     Col 2: Timings (shift progress)
+     Col 3: Actions (clock buttons)
+════════════════════════════════════════════════════ -->
+<div class="section-title mb-3">Attendance Stats</div>
+
+<div class="row g-3 mb-4">
+
+  <!-- ── Col 1: Stats ── -->
+  <div class="col-lg-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Stats</span>
+        <span style="font-size:12px;color:var(--text-3);">{{ weekly_stats.week_start|date:"d M" }} – {{ weekly_stats.week_end|date:"d M" }}</span>
+      </div>
+      <div class="ems-card-body" style="padding:0;">
+
+        <!-- Me row -->
+        <div class="p-3" style="border-bottom:1px solid var(--border);">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="stats-avatar" style="background:var(--primary-light);color:var(--primary);">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span style="font-size:13px;font-weight:700;">Me</span>
+          </div>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="stats-lbl">Avg Hrs / Day</div>
+              <div class="stats-val">{{ weekly_stats.avg_effective_hours }}</div>
+            </div>
+            <div class="col-6">
+              <div class="stats-lbl">Days Attended</div>
+              <div class="stats-val">{{ weekly_stats.days_attended }}</div>
+            </div>
+            <div class="col-6">
+              <div class="stats-lbl">Total This Week</div>
+              <div style="font-size:16px;font-weight:700;color:var(--text);">{{ weekly_stats.total_effective_hours }}</div>
+            </div>
+            <div class="col-6">
+              <div class="stats-lbl">Today Worked</div>
+              <div style="font-size:16px;font-weight:700;color:{% if open_session %}var(--primary){% else %}var(--text){% endif %};">{{ today_worked }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Team row (if has reports) -->
+        {% if team_stats %}
+        <div class="p-3">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="stats-avatar" style="background:#dcfce7;color:#16a34a;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span style="font-size:13px;font-weight:700;">My Team</span>
+            <span style="font-size:11px;color:var(--text-3);">({{ team_stats.team_size }} members)</span>
+          </div>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="stats-lbl">Avg Hrs / Day</div>
+              <div class="stats-val">{{ team_stats.avg_effective_hours }}</div>
+            </div>
+            <div class="col-6">
+              <div class="stats-lbl">Present Today</div>
+              <div class="stats-val">{{ team_stats.members_present_today }}</div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="p-3">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="stats-avatar" style="background:#dcfce7;color:#16a34a;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <span style="font-size:13px;font-weight:700;">My Team</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-3);">0h · No direct reports</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Col 2: Timings (shift visual) ── -->
+  <div class="col-lg-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Timings</span>
+      </div>
+      <div class="ems-card-body">
+
+        <!-- Weekday pills -->
+        <div class="weekday-pills mb-4">
+          {% for pill in weekday_pills %}
+          <div class="wd-pill {% if pill.is_today %}today{% elif not pill.is_working %}off{% else %}working{% endif %}">
+            {{ pill.label }}
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Today's shift -->
+        {% if shift %}
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:4px;">
+          Today ({{ shift.start_time|time:"h:i A" }} – {{ shift.end_time|time:"h:i A" }})
+        </div>
+        <!-- Progress bar -->
+        <div class="shift-progress-bar">
+          <div class="shift-progress-fill" style="width:{{ shift_progress }}%;"></div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span style="font-size:11px;color:var(--text-3);">Duration: {{ shift.start_time|time:"g:i A" }} – {{ shift.end_time|time:"g:i A" }}</span>
+          <span style="font-size:11px;color:var(--text-3);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:12px;height:12px;margin-right:2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            {{ shift.break_minutes }} min break
+          </span>
+        </div>
+        {% if shift_elapsed_label %}
+        <div class="mt-3 p-2 rounded-2" style="background:var(--primary-light);font-size:12px;font-weight:600;color:var(--primary);">
+          ▶ {{ shift_elapsed_label }}
+        </div>
+        {% endif %}
+
+        <!-- Today sessions -->
+        {% if today_sessions %}
+        <div class="mt-3">
+          {% for s in today_sessions %}
+          <div class="d-flex align-items-center gap-2 mb-1" style="font-size:12px;">
+            <span class="ems-badge {% if s.work_mode == 'WFH' %}badge-wfh{% else %}badge-office{% endif %}" style="font-size:10px;">{{ s.work_mode }}</span>
+            <span style="color:var(--text-2);">{{ s.clock_in_at|time:"h:i A" }}</span>
+            <span style="color:var(--text-3);">→</span>
+            <span style="color:var(--text-2);">{% if s.clock_out_at %}{{ s.clock_out_at|time:"h:i A" }}{% else %}<span style="color:var(--primary);font-weight:700;">Live</span>{% endif %}</span>
+            {% if s.clock_out_at %}<span style="color:var(--text-3);">{{ s.gross_hours_display }}</span>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="ems-empty" style="padding:20px 0;"><p>No shift assigned. Contact HR.</p></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Col 3: Actions ── -->
+  <div class="col-lg-4">
+    <div class="ems-card h-100">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Actions</span>
+      </div>
+      <div class="ems-card-body">
+
+        <!-- Live clock -->
+        <div class="text-center mb-4">
+          <div id="liveClock">--:--:-- <span style="font-size:14px;">AM</span></div>
+          <div id="liveDate"></div>
+        </div>
+
+        <!-- Action links -->
+        <div class="action-links">
+
+          <!-- Office Clock In / Out -->
+          {% if open_session and open_session.work_mode == 'OFFICE' %}
+          <form method="post" action="{% url 'attendance:clock_out' %}">
+            {% csrf_token %}
+            <button type="submit" class="action-link active-session w-100" data-confirm="Clock out from office?">
+              <div class="al-icon" style="background:#fee2e2;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#dc2626" style="width:15px;height:15px;"><circle cx="12" cy="12" r="10"/><line x1="9" y1="15" x2="15" y2="9"/></svg>
+              </div>
+              <div>
+                <div>Clock Out — Office</div>
+                <div style="font-size:11px;font-weight:400;opacity:.7;">In since {{ open_session.clock_in_at|time:"h:i A" }}</div>
+              </div>
+            </button>
+          </form>
+          {% elif open_session and open_session.work_mode == 'WFH' %}
+          <div class="action-link disabled">
+            <div class="al-icon" style="background:#e8eaed;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" style="width:15px;height:15px;"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+            </div>
+            <div>Web Clock-In<div style="font-size:11px;font-weight:400;">WFH session active</div></div>
+          </div>
+          {% else %}
+          <form method="post" action="{% url 'attendance:clock_in' %}">
+            {% csrf_token %}
+            <input type="hidden" name="work_mode" value="OFFICE">
+            <button type="submit" class="action-link w-100">
+              <div class="al-icon" style="background:#dbeafe;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#2563eb" style="width:15px;height:15px;"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+              </div>
+              Web Clock-In
+            </button>
+          </form>
+          {% endif %}
+
+          <!-- WFH Clock In / Out -->
+          {% if open_session and open_session.work_mode == 'WFH' %}
+          <form method="post" action="{% url 'attendance:clock_out' %}">
+            {% csrf_token %}
+            <button type="submit" class="action-link wfh-active w-100" data-confirm="Clock out from WFH?">
+              <div class="al-icon" style="background:#ede9fe;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" style="width:15px;height:15px;"><circle cx="12" cy="12" r="10"/><line x1="9" y1="15" x2="15" y2="9"/></svg>
+              </div>
+              <div>
+                <div>Clock Out — WFH</div>
+                <div style="font-size:11px;font-weight:400;opacity:.7;">In since {{ open_session.clock_in_at|time:"h:i A" }}</div>
+              </div>
+            </button>
+          </form>
+          {% elif wfh_approved_today and not open_session %}
+          <form method="post" action="{% url 'attendance:clock_in' %}">
+            {% csrf_token %}
+            <input type="hidden" name="work_mode" value="WFH">
+            <button type="submit" class="action-link w-100">
+              <div class="al-icon" style="background:#ede9fe;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" style="width:15px;height:15px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              Work From Home
+            </button>
+          </form>
+          {% else %}
+          <a href="#" onclick="openWFHDrawer(); return false;" class="action-link">
+            <div class="al-icon" style="background:#ede9fe;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" style="width:15px;height:15px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            Work From Home
+            {% if not wfh_approved_today %}<span style="font-size:10px;color:var(--text-3);margin-left:auto;">Request →</span>{% endif %}
+          </a>
+          {% endif %}
+
+          <!-- On Duty / Correction Request -->
+          <a href="#" onclick="openCorrectionDrawer(); return false;" class="action-link">
+            <div class="al-icon" style="background:#fef9c3;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ca8a04" style="width:15px;height:15px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            Request Correction
+          </a>
+
+          <!-- WFH Request (always available) -->
+          <a href="#" onclick="openWFHDrawer(); return false;" class="action-link">
+            <div class="al-icon" style="background:#dcfce7;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#16a34a" style="width:15px;height:15px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+            </div>
+            Apply WFH Request
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     CHARTS ROW
+════════════════════════════════════════════════════ -->
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Daily Hours — Last 14 Working Days</span>
+      </div>
+      <div class="ems-card-body"><div class="chart-wrap-lg"><canvas id="chartDaily"></canvas></div></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="ems-card">
+      <div class="ems-card-header">
+        <span class="ems-card-title">Work Mode Split (30d)</span>
+      </div>
+      <div class="ems-card-body"><div class="chart-wrap-lg"><canvas id="chartMode"></canvas></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     LOGS & REQUESTS — Keka-style
+════════════════════════════════════════════════════ -->
+<div class="ems-card">
+
+  <!-- Section header -->
+  <div class="ems-card-header">
+    <span class="section-title">Logs &amp; Requests</span>
+  </div>
+
+  <!-- Tab nav -->
+  <div style="padding:0 20px;border-bottom:2px solid var(--border);">
+    <div class="ems-tabs">
+      <a href="?tab=logs&period={{ period }}" class="ems-tab {% if active_tab != 'wfh' and active_tab != 'corrections' %}active{% endif %}">Attendance Log</a>
+      <a href="?tab=wfh" class="ems-tab {% if active_tab == 'wfh' %}active{% endif %}">
+        WFH Requests
+        {% if wfh_page.paginator.count %}<span class="ems-badge badge-pending ms-1" style="font-size:10px;">{{ wfh_page.paginator.count }}</span>{% endif %}
+      </a>
+      <a href="?tab=corrections" class="ems-tab {% if active_tab == 'corrections' %}active{% endif %}">
+        Correction Requests
+        {% if correction_qs %}<span class="ems-badge badge-pending ms-1" style="font-size:10px;">{{ correction_qs|length }}</span>{% endif %}
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Attendance Log tab ── -->
+  {% if active_tab != 'wfh' and active_tab != 'corrections' %}
+
+  <!-- Period pills + filters -->
+  <div class="p-3 d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-bottom:1px solid var(--border);">
+    <div class="d-flex align-items-center gap-2">
+      <span style="font-size:13px;font-weight:700;color:var(--text-2);">Last 30 Days</span>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <!-- Period pills -->
+      <div class="period-pills">
+        <a href="?tab=logs&period=30" class="period-pill {% if period == '30' %}active{% endif %}">30 DAYS</a>
+        {% for pill_val, pill_label in period_pills|slice:"1:" %}
+        <a href="?tab=logs&period={{ pill_val }}" class="period-pill {% if period == pill_val %}active{% endif %}">{{ pill_label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters row -->
+  <form method="get" class="px-3 py-2 d-flex gap-2 align-items-center flex-wrap" style="border-bottom:1px solid var(--border);">
+    <input type="hidden" name="tab" value="logs">
+    <input type="hidden" name="period" value="{{ period }}">
+    <input type="date" name="date_from" value="{{ date_from }}" class="form-control" style="height:32px;font-size:12px;width:140px;">
+    <span style="font-size:12px;color:var(--text-3);">to</span>
+    <input type="date" name="date_to" value="{{ date_to }}" class="form-control" style="height:32px;font-size:12px;width:140px;">
+    <select name="mode" class="form-select" style="height:32px;font-size:12px;width:130px;">
+      <option value="">All Modes</option>
+      <option value="OFFICE" {% if mode_filter == 'OFFICE' %}selected{% endif %}>Office</option>
+      <option value="WFH"    {% if mode_filter == 'WFH' %}selected{% endif %}>WFH</option>
+    </select>
+    <select name="status" class="form-select" style="height:32px;font-size:12px;width:140px;">
+      <option value="">All Status</option>
+      <option value="COMPLETED"  {% if status_filter == 'COMPLETED' %}selected{% endif %}>Completed</option>
+      <option value="INCOMPLETE" {% if status_filter == 'INCOMPLETE' %}selected{% endif %}>Incomplete</option>
+    </select>
+    <button type="submit" class="ems-btn btn-primary btn-sm">Filter</button>
+    <a href="?tab=logs" class="ems-btn btn-outline btn-sm">Clear</a>
+    <span style="font-size:12px;color:var(--text-3);margin-left:auto;">{{ logs_page.paginator.count }} records</span>
+  </form>
+
+  <!-- Log table -->
+  <div style="overflow-x:auto;">
+    <table class="ems-table">
+      <thead>
+        <tr>
+          <th style="width:120px;">DATE</th>
+          <th>ATTENDANCE VISUAL</th>
+          <th>EFFECTIVE HOURS</th>
+          <th>GROSS HOURS</th>
+          <th>ARRIVAL</th>
+          <th>STATUS</th>
+          <th>LOG</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for session in logs_page %}
+        {% with wd=session.work_date.weekday %}
+        <tr class="{% if session.work_date == today %}log-today{% elif wd >= 5 %}log-weekend{% endif %}">
+          <td>
+            <div style="font-weight:{% if session.work_date == today %}800{% else %}600{% endif %};font-size:13px;color:{% if wd >= 5 %}var(--text-3){% else %}var(--text){% endif %};">
+              {{ session.work_date|date:"D, d M" }}
+            </div>
+            {% if session.work_mode == 'WFH' %}
+            <span class="ems-badge badge-wfh" style="font-size:9px;margin-top:2px;">W-OFF</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if session.clock_out_at %}
+            {% with pct=session.gross_hours_display %}
+            <div class="att-visual {% if session.work_mode == 'WFH' %}att-visual-wfh{% endif %}">
+              <!-- Rough width based on hours — max 9h = 100% -->
+              {% with dur_secs=session.gross_duration.total_seconds %}
+              <div class="att-visual-fill" style="width:{% widthratio dur_secs 32400 100 %}%;"></div>
+              {% endwith %}
+            </div>
+            <div style="font-size:10px;color:var(--text-3);margin-top:2px;">{{ session.clock_in_at|time:"H:i" }} – {{ session.clock_out_at|time:"H:i" }}</div>
+            {% endwith %}
+            {% elif session.status == 'OPEN' %}
+            <div style="font-size:12px;font-weight:600;color:var(--primary);">● Live now</div>
+            {% else %}
+            <div style="font-size:12px;color:var(--text-3);">No time entries</div>
+            {% endif %}
+          </td>
+          <td style="font-weight:700;font-size:14px;color:var(--primary);">
+            {% if session.clock_out_at %}{{ session.gross_hours_display }}{% else %}—{% endif %}
+          </td>
+          <td style="font-size:13px;color:var(--text-2);">
+            {% if session.clock_out_at %}{{ session.gross_hours_display }}{% else %}—{% endif %}
+          </td>
+          <td style="font-size:13px;font-weight:500;">
+            {% if session.clock_in_at %}{{ session.clock_in_at|time:"h:i A" }}{% else %}—{% endif %}
+          </td>
+          <td>
+            <span class="ems-badge badge-{{ session.status|lower }}">{{ session.get_status_display }}</span>
+          </td>
+          <td>
+            <span style="font-size:18px;color:var(--text-3);cursor:pointer;" title="Options">⋯</span>
+          </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr><td colspan="7">
+          <div class="ems-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h6>No attendance records</h6>
+            <p>Use the Actions panel to clock in.</p>
+          </div>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if logs_page.has_other_pages %}
+  <div class="p-3 d-flex justify-content-between align-items-center" style="border-top:1px solid var(--border);">
+    <span style="font-size:12px;color:var(--text-3);">Page {{ logs_page.number }} of {{ logs_page.paginator.num_pages }}</span>
+    <nav><ul class="pagination pagination-sm mb-0">
+      {% if logs_page.has_previous %}<li class="page-item"><a class="page-link" href="?tab=logs&period={{ period }}&page={{ logs_page.previous_page_number }}&date_from={{ date_from }}&date_to={{ date_to }}&mode={{ mode_filter }}&status={{ status_filter }}">‹ Prev</a></li>{% endif %}
+      {% if logs_page.has_next %}<li class="page-item"><a class="page-link" href="?tab=logs&period={{ period }}&page={{ logs_page.next_page_number }}&date_from={{ date_from }}&date_to={{ date_to }}&mode={{ mode_filter }}&status={{ status_filter }}">Next ›</a></li>{% endif %}
+    </ul></nav>
+  </div>
+  {% endif %}
+
+  <!-- ── WFH Requests tab ── -->
+  {% elif active_tab == 'wfh' %}
+  <div class="p-3 d-flex justify-content-between align-items-center" style="border-bottom:1px solid var(--border);">
+    <span style="font-size:13px;color:var(--text-2);">{{ wfh_page.paginator.count }} total WFH requests</span>
+    <a href="#" onclick="openWFHDrawer(); return false;" class="ems-btn btn-primary btn-sm">+ New Request</a>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="ems-table">
+      <thead><tr><th>Dates</th><th>Duration</th><th>Reason</th><th>Status</th><th>Reviewed By</th></tr></thead>
+      <tbody>
+        {% for req in wfh_page %}
+        <tr>
+          <td>
+            <div style="font-weight:600;">{{ req.start_date|date:"d M Y" }}</div>
+            {% if req.start_date != req.end_date %}<div style="font-size:11px;color:var(--text-3);">to {{ req.end_date|date:"d M Y" }}</div>{% endif %}
+          </td>
+          <td>{{ req.total_days }} day{{ req.total_days|pluralize }}</td>
+          <td style="color:var(--text-2);max-width:200px;">{{ req.reason|truncatechars:60|default:"—" }}</td>
+          <td><span class="ems-badge badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+          <td style="font-size:13px;">{{ req.reviewed_by.get_full_name|default:"Pending review" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5"><div class="ems-empty"><p>No WFH requests yet. <a href="{% url 'attendance:wfh_request' %}">Submit one →</a></p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Correction Requests tab ── -->
+  {% elif active_tab == 'corrections' %}
+  <div class="p-3 d-flex justify-content-between align-items-center" style="border-bottom:1px solid var(--border);">
+    <span style="font-size:13px;color:var(--text-2);">{{ correction_qs|length }} correction requests</span>
+    <a href="{% url 'attendance:correction_request' %}" class="ems-btn btn-primary btn-sm">+ New Correction</a>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="ems-table">
+      <thead><tr><th>Date</th><th>Requested Clock In</th><th>Requested Clock Out</th><th>Reason</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for req in correction_qs %}
+        <tr>
+          <td style="font-weight:600;">{{ req.work_date|date:"d M Y" }}</td>
+          <td>{{ req.requested_clock_in|time:"h:i A" }}</td>
+          <td>{% if req.requested_clock_out %}{{ req.requested_clock_out|time:"h:i A" }}{% else %}—{% endif %}</td>
+          <td style="color:var(--text-2);max-width:200px;">{{ req.reason|truncatechars:55 }}</td>
+          <td><span class="ems-badge badge-{{ req.status|lower }}">{{ req.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5"><div class="ems-empty"><p>No correction requests. <a href="{% url 'attendance:correction_request' %}">Request one →</a></p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+</div><!-- /ems-card -->
+{% endblock %}

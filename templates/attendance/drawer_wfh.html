@@ -1,0 +1,64 @@
+{% load static %}
+{# Partial — rendered inside the right drawer body. No base.html. #}
+
+<!-- From / To dates -->
+<div class="df-row">
+  <div class="df">
+    <label for="df-wfhFrom">From date <span class="req">*</span></label>
+    <input class="dc" type="date" id="df-wfhFrom" name="start_date">
+  </div>
+  <div class="df">
+    <label for="df-wfhTo">To date <span class="req">*</span></label>
+    <input class="dc" type="date" id="df-wfhTo" name="end_date">
+  </div>
+</div>
+
+<!-- Number of days -->
+<div class="df">
+  <span class="df-label">Number of days</span>
+  <div class="df-days-out" id="df-wfhDays">—</div>
+</div>
+
+<!-- Reason -->
+<div class="df">
+  <label for="df-wfhReason">Reason <span class="req">*</span></label>
+  <textarea class="dc" id="df-wfhReason" name="reason" placeholder="Reason for working from home…"></textarea>
+  <div class="df-error" id="df-wfhReasonError"></div>
+</div>
+
+<!-- Info note -->
+<div class="df-note" aria-live="polite">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>
+  <span>
+    Once approved by HR, you will be able to clock in as <strong>Work From Home</strong> on the selected dates.
+    Submit the request at least one day in advance.
+  </span>
+</div>
+
+<style>
+  .df { display: flex; flex-direction: column; }
+  .df label, .df-label { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: #1d2433; font-family: 'Poppins', sans-serif; }
+  .req { color: #f25b5b; }
+  .df-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dc {
+    width: 100%; border: 1px solid #d9dde5; border-radius: 4px;
+    padding: 11px 14px; background: #fff; outline: 0;
+    font-size: 14px; font-family: 'Poppins', sans-serif; color: #1d2433;
+    box-sizing: border-box;
+  }
+  .dc:focus { border-color: #4b3fa8; box-shadow: 0 0 0 3px #eeebfa; }
+  textarea.dc { resize: vertical; min-height: 96px; }
+  .df-days-out {
+    padding: 11px 14px; border-radius: 4px; background: #f1f4f8;
+    font-weight: 500; min-height: 44px; display: flex; align-items: center;
+    font-size: 14px; color: #1d2433;
+  }
+  .df-note {
+    display: flex; gap: 12px; background: #f1f4f8;
+    border: 1px solid #e6eaf0; border-radius: 8px;
+    padding: 16px 18px; line-height: 1.6; font-size: 13px; color: #4b5563;
+  }
+  .df-note svg { width: 18px; height: 18px; flex: none; margin-top: 2px; stroke: #7b8596; fill: none; stroke-width: 1.6; }
+  .df-error { color: #f25b5b; font-size: 12px; margin-top: 6px; }
+  .ems-drawer-body { gap: 22px; display: flex; flex-direction: column; }
+</style>

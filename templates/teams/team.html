@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% block title %}Team{% endblock %}
+{% block page_title %}Team & Org{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ════════════════════════════════
+   KEKA HORIZONTAL ORG TREE CSS
+════════════════════════════════ */
+.org-tree-wrap {
+  overflow-x: auto;
+  padding: 32px 24px 56px;
+  background: #fafbfc;
+  border-radius: 0 0 12px 12px;
+  min-height: 220px;
+}
+
+/* Root holder */
+.keka-tree-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Each level row */
+.keka-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* Column per person: vertical connector top + card + vertical connector bot */
+.keka-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 8px;
+}
+
+/* Horizontal bar connecting siblings (drawn as top border on keka-children-row) */
+.keka-children-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* The horizontal line sits at the very top of children-row, spanning mid-first to mid-last */
+.keka-children-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%; right: 50%;
+  height: 2px;
+  background: #c7d2fe;
+  transition: left .3s, right .3s;
+}
+
+/* Vertical line */
+.keka-vline {
+  width: 2px;
+  height: 30px;
+  background: #c7d2fe;
+  flex-shrink: 0;
+}
+
+/* NODE CARD */
+.keka-node {
+  width: 200px;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 12px 28px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  transition: border-color .15s, box-shadow .15s;
+  cursor: default;
+}
+.keka-node:hover {
+  border-color: #5b5ef4;
+  box-shadow: 0 4px 14px rgba(91,94,244,.14);
+}
+.keka-node--me {
+  border-color: #5b5ef4;
+  background: #f5f3ff;
+}
+
+.kn-top { display: flex; align-items: flex-start; gap: 10px; }
+.kn-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; color: #fff;
+}
+.kn-name  { font-size: 13px; font-weight: 700; color: #1a1d23; line-height: 1.3; }
+.kn-title { font-size: 11px; color: #6b7280; margin-top: 2px; }
+.kn-loc   { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+.kn-footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 5px 12px 7px;
+  border-top: 1px solid #f3f4f6;
+  font-size: 9px; font-weight: 700; letter-spacing: .06em;
+  color: #9ca3af; text-transform: uppercase;
+  border-radius: 0 0 11px 11px;
+}
+
+/* Expand bubble */
+.keka-bubble {
+  position: absolute;
+  bottom: -14px; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 28px;
+  background: #5b5ef4;
+  color: #fff;
+  border-radius: 50%;
+  border: 3px solid #fafbfc;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800;
+  cursor: pointer; z-index: 5;
+  box-shadow: 0 2px 6px rgba(91,94,244,.45);
+  transition: background .12s, transform .12s;
+  user-select: none;
+}
+.keka-bubble:hover { background: #4240c4; transform: translateX(-50%) scale(1.1); }
+.keka-bubble.collapsed { background: #9ca3af; }
+
+/* Controls */
+.org-ctrl-bar {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+.org-ctrl-btn {
+  padding: 5px 14px; border-radius: 7px;
+  font-size: 12px; font-weight: 600;
+  border: 1.5px solid transparent;
+  background: none; cursor: pointer; color: #5f6b7c;
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: all .12s; white-space: nowrap;
+}
+.org-ctrl-btn:hover  { background: #ededfd; color: #5b5ef4; }
+.org-ctrl-btn.active { background: #ededfd; border-color: #5b5ef4; color: #5b5ef4; }
+
+/* Team directory */
+.dir-card {
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.dir-card:hover { border-color: #5b5ef4; box-shadow: 0 4px 12px rgba(91,94,244,.1); }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.getElementById('orgTreeContainer')) {
+    buildOrgTree();
+  }
+});
+
+function buildOrgTree() {
+  fetch('/teams/org-tree/')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (!data.tree) { orgTreeError(); return; }
+      var container = document.getElementById('orgTreeContainer');
+      container.innerHTML = '';
+
+      var COLORS = [
+        '#5b5ef4','#06b6d4','#10b981','#f59e0b',
+        '#ef4444','#8b5cf6','#ec4899','#f97316',
+        '#14b8a6','#3b82f6','#84cc16','#a855f7'
+      ];
+      var ci = 0;
+      function nextColor() { return COLORS[(ci++) % COLORS.length]; }
+
+      function makeCard(node) {
+        var clr = nextColor();
+        var isMe = node.id === data.current_id;
+        var hasKids = node.children && node.children.length > 0;
+
+        var card = document.createElement('div');
+        card.className = 'keka-node' + (isMe ? ' keka-node--me' : '');
+
+        card.innerHTML =
+          '<div class="kn-top">' +
+            '<div class="kn-avatar" style="background:' + clr + ';">' + node.initials + '</div>' +
+            '<div>' +
+              '<div class="kn-name">' + node.name + '</div>' +
+              '<div class="kn-title">' + (node.designation || '') + '</div>' +
+              '<div class="kn-loc">' + (node.department || '') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="kn-footer">' + (node.department || '').toUpperCase() + '</div>';
+
+        if (hasKids) {
+          var bubble = document.createElement('button');
+          bubble.className = 'keka-bubble';
+          bubble.textContent = node.children.length;
+          bubble.title = node.children.length + ' report(s)';
+          bubble.setAttribute('data-open', '1');
+
+          bubble.addEventListener('click', function () {
+            var open = this.getAttribute('data-open') === '1';
+            var childSection = this.closest('.keka-col').querySelector('.keka-children-section');
+            var vBot = this.closest('.keka-col').querySelector('.keka-vline-bot');
+            if (childSection) {
+              childSection.style.display = open ? 'none' : '';
+              if (vBot) vBot.style.display = open ? 'none' : '';
+            }
+            this.setAttribute('data-open', open ? '0' : '1');
+            this.classList.toggle('collapsed', open);
+          });
+          card.appendChild(bubble);
+        }
+        return card;
+      }
+
+      function buildLevel(nodes) {
+        var row = document.createElement('div');
+        row.className = 'keka-children-row';
+
+        nodes.forEach(function (node) {
+          var col = document.createElement('div');
+          col.className = 'keka-col';
+
+          /* Vline coming down from parent bar */
+          var vTop = document.createElement('div');
+          vTop.className = 'keka-vline';
+          col.appendChild(vTop);
+
+          col.appendChild(makeCard(node));
+
+          if (node.children && node.children.length > 0) {
+            var vBot = document.createElement('div');
+            vBot.className = 'keka-vline keka-vline-bot';
+            col.appendChild(vBot);
+
+            var childSection = document.createElement('div');
+            childSection.className = 'keka-children-section';
+            childSection.appendChild(buildLevel(node.children));
+            col.appendChild(childSection);
+          }
+
+          row.appendChild(col);
+        });
+
+        /* Wire horizontal line width dynamically */
+        setTimeout(function () {
+          wireHLine(row);
+        }, 50);
+
+        return row;
+      }
+
+      /* Wire the horizontal line to span from first-child center to last-child center */
+      function wireHLine(row) {
+        var cols = row.querySelectorAll(':scope > .keka-col');
+        if (cols.length < 2) {
+          row.style.setProperty('--hl-left', '50%');
+          row.style.setProperty('--hl-right', '50%');
+          return;
+        }
+        var rowRect = row.getBoundingClientRect();
+        var firstRect = cols[0].getBoundingClientRect();
+        var lastRect  = cols[cols.length - 1].getBoundingClientRect();
+        var leftPct   = ((firstRect.left + firstRect.width/2) - rowRect.left) / rowRect.width * 100;
+        var rightPct  = 100 - ((lastRect.left + lastRect.width/2) - rowRect.left) / rowRect.width * 100;
+        row.style.cssText += ';--hl-left:' + leftPct + '%;--hl-right:' + rightPct + '%;';
+        /* Apply via pseudo-element using inline style on data attrs */
+        row.setAttribute('data-hl-left', leftPct.toFixed(1) + '%');
+        row.setAttribute('data-hl-right', rightPct.toFixed(1) + '%');
+        /* Directly set the CSS */
+        if (cols.length > 1) {
+          row.style.position = 'relative';
+          /* Draw line as absolute div */
+          var existing = row.querySelector('.keka-hline-drawn');
+          if (!existing) {
+            var hline = document.createElement('div');
+            hline.className = 'keka-hline-drawn';
+            hline.style.cssText =
+              'position:absolute;top:0;left:' + leftPct + '%;right:' + rightPct + '%;' +
+              'height:2px;background:#c7d2fe;z-index:0;';
+            row.insertBefore(hline, row.firstChild);
+          }
+        }
+      }
+
+      /* Build the root */
+      var rootWrap = document.createElement('div');
+      rootWrap.className = 'keka-tree-root';
+
+      /* Root column */
+      var rootCol = document.createElement('div');
+      rootCol.className = 'keka-col';
+      rootCol.appendChild(makeCard(data.tree));
+
+      if (data.tree.children && data.tree.children.length > 0) {
+        var rootVbot = document.createElement('div');
+        rootVbot.className = 'keka-vline keka-vline-bot';
+        rootCol.appendChild(rootVbot);
+
+        var rootChildSection = document.createElement('div');
+        rootChildSection.className = 'keka-children-section';
+        var childRow = buildLevel(data.tree.children);
+        rootChildSection.appendChild(childRow);
+        rootCol.appendChild(rootChildSection);
+
+        /* Wire horizontal line after DOM insertion */
+        setTimeout(function () { wireHLine(childRow); }, 100);
+      }
+
+      rootWrap.appendChild(rootCol);
+      container.appendChild(rootWrap);
+
+      /* Re-wire all h-lines after a full render */
+      setTimeout(function () {
+        container.querySelectorAll('.keka-children-row').forEach(wireHLine);
+      }, 200);
+    })
+    .catch(function () { orgTreeError(); });
+}
+
+function orgTreeError() {
+  var c = document.getElementById('orgTreeContainer');
+  if (c) c.innerHTML = '<div class="ems-empty" style="padding:40px 0;"><p>Could not load org tree. <button onclick="buildOrgTree()" class="ems-btn btn-outline btn-sm ms-2">Retry</button></p></div>';
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="ems-page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <h1 class="ems-page-title">Team &amp; Organisation</h1>
+    <p class="ems-page-sub">{{ today|date:"l, F j, Y" }}</p>
+  </div>
+</div>
+
+<!-- Tab bar -->
+<div class="ems-card mb-3" style="padding:0;">
+  <div style="display:flex;border-bottom:2px solid var(--border);padding:0 16px;">
+    <a href="?view=directory" class="ems-tab {% if request.GET.view != 'org' %}active{% endif %}">Employee Directory</a>
+    <a href="?view=org"       class="ems-tab {% if request.GET.view == 'org' %}active{% endif %}">Organization Tree</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     ORGANISATION TREE
+══════════════════════════════ -->
+{% if request.GET.view == 'org' %}
+
+<div class="ems-card">
+  <div class="ems-card-header" style="flex-wrap:wrap;gap:10px;">
+    <span class="ems-card-title">Organization Tree</span>
+    <div class="org-ctrl-bar ms-auto">
+      <span style="font-size:12px;color:var(--text-3);margin-right:4px;">Go to</span>
+      <button class="org-ctrl-btn active" id="btnMe">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Me
+      </button>
+      <button class="org-ctrl-btn" id="btnTop">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg>
+        Top of the Org
+      </button>
+    </div>
+  </div>
+  <div class="org-tree-wrap" id="orgTreeContainer">
+    <div class="ems-empty">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:40px;height:40px;opacity:.2;"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="5" y1="16" x2="12" y2="12"/><line x1="19" y1="16" x2="12" y2="12"/></svg>
+      <p style="margin-top:8px;font-size:13px;">Loading…</p>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<!-- ══════════════════════════════
+     EMPLOYEE DIRECTORY
+══════════════════════════════ -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ direct_reports_count }}</div><div class="ems-stat-label">Direct Reports</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-success">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ present_today }}</div><div class="ems-stat-label">Present Today</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-danger">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ on_leave_today|length }}</div><div class="ems-stat-label">On Leave</div></div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="ems-stat-card">
+      <div class="ems-stat-icon si-purple">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div><div class="ems-stat-value">{{ wfh_today }}</div><div class="ems-stat-label">WFH Today</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- On leave today -->
+{% if on_leave_today %}
+<div class="ems-card mb-3">
+  <div class="ems-card-header"><span class="ems-card-title">On Leave Today</span></div>
+  <div class="ems-card-body" style="padding-top:12px;">
+    <div class="d-flex flex-wrap gap-3">
+      {% for item in on_leave_today %}
+      <div style="display:flex;align-items:center;gap:10px;background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:10px 14px;">
+        <div class="ems-emp-avatar" style="background:#ef4444;">{{ item.employee.get_initials }}</div>
+        <div>
+          <div style="font-size:13px;font-weight:700;">{{ item.employee.get_full_name }}</div>
+          <div style="font-size:11px;color:#991b1b;">{{ item.leave.leave_type.name }} · Returns {{ item.leave.end_date|date:"d M" }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Directory -->
+<div class="ems-card">
+  <div class="ems-card-header">
+    <span class="ems-card-title">Team Directory</span>
+    <span style="font-size:12px;color:var(--text-3);">{{ direct_reports_count }} direct report{{ direct_reports_count|pluralize }}</span>
+  </div>
+  <div class="p-3" style="border-bottom:1px solid var(--border);">
+    <form method="get">
+      <input type="hidden" name="view" value="directory">
+      <div class="ems-search-wrap" style="max-width:320px;">
+        <span class="ems-search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="text" name="q" value="{{ search }}" class="ems-search-input" placeholder="Search employees…">
+      </div>
+    </form>
+  </div>
+  <div class="ems-card-body">
+    {% if team_page %}
+    <div class="row g-3">
+      {% for emp in team_page %}
+      <div class="col-md-6 col-xl-4">
+        <div class="dir-card">
+          <div class="d-flex align-items-start gap-3">
+            <div class="ems-emp-avatar lg">{{ emp.get_initials }}</div>
+            <div style="min-width:0;flex:1;">
+              <div style="font-size:14px;font-weight:700;color:var(--text);">{{ emp.get_full_name }}</div>
+              <div style="font-size:12px;color:var(--text-2);margin-top:2px;">{{ emp.designation.title|default:"—" }}</div>
+              <div style="font-size:11px;color:var(--text-3);">{{ emp.department.name|default:"—" }}</div>
+              <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
+                <span class="ems-badge badge-{{ emp.employment_status|lower }}" style="font-size:10px;">{{ emp.get_employment_status_display }}</span>
+                {% if emp.direct_reports.exists %}
+                <span style="font-size:11px;color:var(--primary);font-weight:600;">{{ emp.direct_reports.count }} reports</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 pt-2" style="border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;color:var(--text-3);">{{ emp.employee_id }}</span>
+            <span style="font-size:11px;color:var(--text-3);">{{ emp.work_location }}</span>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12"><div class="ems-empty"><h6>No team members found.</h6></div></div>
+      {% endfor %}
+    </div>
+    {% if team_page.has_other_pages %}
+    <div class="mt-3 d-flex justify-content-center">
+      <nav><ul class="pagination pagination-sm mb-0">
+        {% if team_page.has_previous %}<li class="page-item"><a class="page-link" href="?view=directory&q={{ search }}&page={{ team_page.previous_page_number }}">‹</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ team_page.number }}/{{ team_page.paginator.num_pages }}</span></li>
+        {% if team_page.has_next %}<li class="page-item"><a class="page-link" href="?view=directory&q={{ search }}&page={{ team_page.next_page_number }}">›</a></li>{% endif %}
+      </ul></nav>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="ems-empty"><h6>No direct reports.</h6><p>You don't have any direct reports yet.</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}
